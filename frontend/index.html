@@ -1,0 +1,165 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Box</title>
+    <link href="./css/output.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/33aaf20e7f.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="sign-layer" class="hidden absolute z-100 w-full h-full bg-black/25 flex justify-center pt-20">
+        <div id="sign-up-card" class="hidden absolute py-6 px-6 bg-white rounded-xl shadow-md">
+            <h1 id="sign-up-title" class="text-3xl font-bold">create new account</h1>
+            <form id="sign-up-form" method="POST" class="mt-8 flex flex-col gap-1">
+                <input name="usernameInput" type="text" maxlength="32" required placeholder="username" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
+                <input name="emailInput" type="text" maxlength="64" placeholder="email (optional)" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
+                <input name="passwordInput" type="password" maxlength="128" required placeholder="password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
+                <input name="confirmPasswordInput" type="password" maxlength="128" required placeholder="confirm password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
+
+                <input type="submit" value="Create Account" class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-lg py-1 px-3 mt-6 rounded-xl text-white">
+
+                <div class="flex gap-2 items-center text-sm pl-2">
+                    <p>have account already?</p>
+                    <a class="text-blue-600 cursor-pointer hover:text-blue-900" onclick="toggleSignBox()">login</a>
+                </div>
+            </form>
+        </div>
+        <div id="sign-in-card" class=" absolute py-6 px-6 bg-white rounded-xl shadow-md">
+            <h1 id="sign-in-title" class="text-3xl font-bold">welcome back! login</h1>
+            <form id="sign-in-form" method="POST" class="mt-8 flex flex-col gap-1">
+                <input name="usernameOrEmailInput" type="text" maxlength="32" required placeholder="username or email" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
+                <input name="passwordInput" type="password" maxlength="128" required placeholder="password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
+                
+                <input type="submit" value="Enter Account" class="bg-green-600 hover:bg-green-700 cursor-pointer text-lg py-1 px-3 mt-6 rounded-xl text-white">
+
+                <div class="flex gap-2 items-center text-sm pl-2">
+                    <p>don't have account?</p>
+                    <a class="text-blue-600 cursor-pointer hover:text-blue-900" onclick="toggleSignBox()">signup</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <header id="header" class="h-12 px-16 text-3xl bg-yellow-300 flex items-center">
+        <div id="dashboard-section" class="flex gap-2 flex-1">
+            <h1 class="font-bold">Dashboard</h1>
+        </div>
+
+        <div class="relative mr-16">
+            <button class="text-xl" onclick="toggleAccountDetails()"><i class="fa-solid fa-user text-4xl"></i></button>
+            <div id="account-card" class="hidden absolute top-10 left-0 -translate-x-1/4 bg-gray-200 w-60 px-3 py-2 border-black/40 shadow-md border-1 rounded-xl">
+                <h1 class="text-xl text-center px-8">Account Details</h1>
+                <div class="flex gap-1 text-base mt-4">
+                    <ul>
+                        <li>username</li>
+                        <li>email</li>
+                        <li>password</li>
+                        <li>public key</li>
+                    </ul>
+                    <ul>
+                        <li>:</li>
+                        <li>:</li>
+                        <li>:</li>
+                        <li>:</li>
+                    </ul>
+                    <ul id="account-details" class="ml-2">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div id="sign-options" class="flex justify-center mt-4">
+                    <a id="logout-btn" class="hidden text-xl cursor-pointer hover:text-black/50" onclick="LogoutBtnHandler()"><i class="fa-solid fa-right-to-bracket"></i> logout</a>
+                    <a id="login-btn" class="text-xl cursor-pointer hover:text-black/50" onclick="loginBtnHandler()"><i class="fa-solid fa-right-to-bracket"></i> login</a>
+                </div>
+            </div>
+        </div>
+        
+    </header>
+
+    
+    <main id="main" class="flex px-15">
+        <div id="data-manager-section" class="flex-1 px-2 flex flex-col">
+            <h1 class="text-4xl text-center font-bold mt-6">Data Manager</h1>
+
+            <button onclick="showNewDataLayer()" class="mt-10 bg-green-500 hover:bg-green-600 self-end mr-6 pl-1 pr-2 text-2xl rounded-lg"><i class="fa-solid fa-plus"></i> new</button>
+            <div id="add-data-layer" class="hidden absolute top-0 left-0 w-full h-screen bg-black/30 ">
+                <div class="mt-30 px-6 py-3 bg-white rounded-xl border-1 w-100 mx-auto">
+                    <h1 class="text-3xl text-center">create new data</h1>
+                    <form id="add-data-form" method="POST" class="mt-6 flex flex-col gap-2">
+                        <input type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-1/2">
+                        <textarea name="body" placeholder="body" rows="2" required class="border-1 rounded-xl px-2 py-1"></textarea>
+                        <div class="flex justify-between mt-4">
+                            <button onclick="closeNewDataLayer()" type="button" class="text-lg bg-red-500 hover:bg-red-600 px-5 py-1 rounded-xl h-fit">cancel</button>
+                            <input type="submit" value="add now" class="bg-green-500 hover:bg-green-600 px-5 py-1 text-lg rounded-xl cursor-pointer">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <ul class=" flex bg-black border-1 text-2xl rounded-lg py-1 px-1 text-white text-center">
+                <li class="flex-3">No</li>
+                <li class="flex-16 text-left">Title</li>
+                <li class="flex-24 text-left pl-2">Value</li>
+                <li class="flex-4">Access</li>
+                <li class="flex-6">Actions</li>
+            </ul>
+            <div id="data-container" class="flex flex-col gap-2 text-lg">
+                <ul class="hidden flex text-center border-b-1">
+                    <li class="flex-3">1</li>
+                    <li class="flex-16 text-left pl-2">lepree</li>
+                    <li class="flex-24 text-left pl-2">oi</li>
+                    <li class="flex-4"><button><i class="fa-solid fa-lock"></i></button></li>
+                    <li class="flex-6">
+                        <button class="h-4"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="h-4"><i class="fa-solid fa-trash"></i></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        
+    </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="./js/UI-function.js"></script>
+    <script src="./js/fetching.js"></script>
+    <script src="./js/register.js"></script>
+    <script src="./js/login.js"></script>
+    <script src="./js/addData.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
