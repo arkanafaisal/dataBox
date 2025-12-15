@@ -47,3 +47,17 @@ async function setDataManager(token){
         console.log(err)
     }
 }
+
+
+
+function router() {
+    const hash = window.location.hash || "#/";
+
+    if (hash.startsWith("#/profile/")) {
+        const username = hash.split("/")[2];
+        alert(username)
+    }
+}
+
+window.addEventListener("hashchange", router);
+window.addEventListener("load", router);
