@@ -8,9 +8,9 @@ async function fetching(endpoint, methood, body = null, token = null){
     if(body) options.body = JSON.stringify(body);
     if(token) options.headers.Authorization = token;
 
-    const developmentIp = "http://localhost:3000/"
+    const developmentIP = "http://localhost:3000/"
     const productionIP = "https://databox-server.arkanafaisal.my.id/"
 
-    const response = await fetch(productionIp + endpoint, options)
+    const response = await fetch(productionIP + endpoint, options)
     return await response.json()
 }
