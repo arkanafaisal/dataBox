@@ -42,3 +42,16 @@ function closeNewDataLayer(){
     const newDataLayer = document.getElementById('add-data-layer');
     newDataLayer.classList.add('hidden');
 }
+
+function changeAccessIcon(newData, el){
+    const lockIcon = el.children[0];
+    const unlockIcon = el.children[1];
+
+    if(newData.access === 'private'){
+        lockIcon.classList.remove('hidden');
+        unlockIcon.classList.add('hidden');
+    } else {
+        lockIcon.classList.add('hidden');
+        unlockIcon.classList.remove('hidden');
+    }
+}

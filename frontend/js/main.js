@@ -29,20 +29,9 @@ async function setDataManager(token){
 
     try{
         const res = await fetching('data/me', 'GET', null, token)
+        console.log(res)
         if(!res.success) return
-        const dataList = res.data
-        const dataContainer = document.getElementById("data-container")
-        const dataListNode = dataContainer.children[0]
-        const fragment = document.createDocumentFragment()
-        dataList.forEach((dataItem, index) => {
-            const newDataNode = dataListNode.cloneNode(true)
-            newDataNode.classList.remove("hidden")
-            newDataNode.children[0].innerText = index + 1
-            newDataNode.children[1].innerText = dataItem.title
-            newDataNode.children[2].innerText = dataItem.body
-            fragment.appendChild(newDataNode)
-        })
-        dataContainer.appendChild(fragment)
+        setMyData(res.data)
     } catch(err){
         console.log(err)
     }
@@ -51,12 +40,20 @@ async function setDataManager(token){
 
 
 function router() {
-    const hash = window.location.hash || "#/";
+    const hash = window.location.hash;
+    let username = null
 
-    if (hash.startsWith("#/profile/")) {
-        const username = hash.split("/")[2];
-        alert(username)
+    if (hash.startsWith("#/")) {
+        if(hash.startsWith("#/profile/")){
+            username = hash.split("/")[2];
+        }
+        username = hash.split("/")[1];
+    } else if(hash === "" || hash === "#") {
+            window.location.hash = "";
+    } else {
+        username = hash.slice(1, hash.length);
     }
+    // alert(username)
 }
 
 window.addEventListener("hashchange", router);

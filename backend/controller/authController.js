@@ -24,12 +24,12 @@ authController.register = async (req, res)=>{
 authController.login = async (req, res)=>{
     const {usernameOrEmail, password} = req.body;
     if(!usernameOrEmail || !password){return response(res, false, 'missing fields')}
+    console.log(usernameOrEmail)
     if(typeof usernameOrEmail !== 'string' || typeof password !== 'string'){return response(res, false, 'invalid username/email or password')}
     if(usernameOrEmail.length > 64 || password.length > 255){return response(res, false, 'invalid input length')}
     try{
         const [result] = await db.query('SELECT id, username FROM users WHERE (username = ? OR email = ?) AND password = ?', [usernameOrEmail, usernameOrEmail, password]);
         if(result.length === 0){return response(res, false, 'invalid credentials')}
-
         const token = jwt.sign({id: result[0].id, username: result[0].username}, process.env.JWT_SECRET, {expiresIn: '7d'})
         return response(res, true, 'signed in', {token})
     } catch(err) {

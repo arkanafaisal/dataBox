@@ -11,18 +11,43 @@ dataController.addData = async (req, res) => {
     if(typeof title !== 'string' || typeof body !== 'string'){return response(res, 400, false, null, 'invalid input type')}
     try{
         const [result] = await db.query('INSERT INTO userData (user_id, title, body) VALUES (?, ?, ?)', [req.user.id, title, body])
-        return response(res, 200, true, 'data added successfully')
+        return response(res, true, 'data added successfully')
     } catch(err) {
-        return response(res, 500, false, null, 'could not add data', err.code)
+        return response(res, false, 'could not add data', null, err.code)
     }
 }
 
 dataController.getMyData = async (req, res) => {
     try{
         const [result] = await db.query('SELECT id, title, body, access FROM userData WHERE user_id = ?', [req.user.id])
-        return response(res, 200, true, result)
+        return response(res, true,'retrieved data successfully', result)
     } catch(err) {
-        return response(res, 500, false, null, 'could not retrieve data', err.code)
+        return response(res, false, 'could not retrieve data', null, err.code)
+    }
+}
+
+dataController.deleteData = async (req, res) => {
+    const dataId = req.params.id;
+    if(!dataId){return response(res, 400, false, null, 'missing data id')}
+    try{
+        const [result] = await db.query('DELETE FROM userData WHERE id = ? AND user_id = ?', [dataId, req.user.id])
+        if(result.affectedRows === 0){return response(res, 404, false, null, 'data not found')}
+        return response(res, true, 'data deleted successfully')
+    } catch(err) {
+        return response(res, false, 'could not delete data', null, err.code)
+    }
+}
+
+dataController.updateAccess = async (req, res) => {
+    const dataId = req.params.id;
+    if(!dataId){return response(res, 400, false, null, 'missing data id')}
+    try{
+        const [result] = await db.query(`UPDATE userData SET access = IF(access = 'public', 'private', 'public') WHERE id = ? AND user_id = ?`, [dataId, req.user.id])
+        if(result.affectedRows === 0){return response(res, 404, false, null, 'data not found')}
+        console.log(result[0])
+        return response(res, true, 'access updated successfully', result[0].access)
+    } catch(err) {
+        return response(res, false, 'could not update access', null, err.code)
     }
 }
 
