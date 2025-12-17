@@ -5,7 +5,7 @@ async function mainFunction(){
     const token = localStorage.getItem("token")
     if(!token) return
     try{
-        const res = await fetching('users/me', 'POST', null, token)
+        const res = await fetching('users/me', 'POST', null, true)
         if(!res.success) return
         showLogoutBtn(true)
         setAccountDetails(res.data.username, res.data.email, res.data.passwordLength, res.data.publicKey)
@@ -28,7 +28,7 @@ async function setDataManager(token){
     const dataManagerSection = document.getElementById("data-manager-section")
 
     try{
-        const res = await fetching('data/me', 'GET', null, token)
+        const res = await fetching('data/me', 'GET', null, true)
         console.log(res)
         if(!res.success) return
         setMyData(res.data)

@@ -11,7 +11,7 @@ dataController.addData = async (req, res) => {
     if(typeof title !== 'string' || typeof body !== 'string'){return response(res, 400, false, null, 'invalid input type')}
     try{
         const [result] = await db.query('INSERT INTO userData (user_id, title, body) VALUES (?, ?, ?)', [req.user.id, title, body])
-        return response(res, true, 'data added successfully')
+        return response(res, true, 'data added successfully', {id: result.insertId, title, body, access:'private'})
     } catch(err) {
         return response(res, false, 'could not add data', null, err.code)
     }
@@ -44,8 +44,9 @@ dataController.updateAccess = async (req, res) => {
     try{
         const [result] = await db.query(`UPDATE userData SET access = IF(access = 'public', 'private', 'public') WHERE id = ? AND user_id = ?`, [dataId, req.user.id])
         if(result.affectedRows === 0){return response(res, 404, false, null, 'data not found')}
-        console.log(result[0])
-        return response(res, true, 'access updated successfully', result[0].access)
+        
+        const [[newDataAccess]] = await db.query('SELECT access FROM userData WHERE id = ? AND user_id = ?', [dataId, req.user.id])
+        return response(res, true, 'access updated successfully', newDataAccess.access)
     } catch(err) {
         return response(res, false, 'could not update access', null, err.code)
     }

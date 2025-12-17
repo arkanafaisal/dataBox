@@ -1,4 +1,4 @@
-async function fetching(endpoint, methood, body = null, token = null){
+async function fetching(endpoint, methood, body = null, isUsingToken = false){
     const options = {
         method: methood,
         headers: {
@@ -6,11 +6,11 @@ async function fetching(endpoint, methood, body = null, token = null){
         }
     }
     if(body) options.body = JSON.stringify(body);
-    if(token) options.headers.Authorization = token;
+    if(isUsingToken) options.headers.Authorization = localStorage.getItem('token');
 
     const developmentIP = "http://localhost:3000/"
     const productionIP = "https://databox-server.arkanafaisal.my.id/"
 
-    const response = await fetch(productionIP + endpoint, options)
+    const response = await fetch(developmentIP + endpoint, options)
     return await response.json()
 }

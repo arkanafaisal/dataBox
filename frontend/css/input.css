@@ -3,6 +3,14 @@
 button{
     cursor: pointer;
 }
+
+.truncate-vertical {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* jumlah baris */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /*
 npx @tailwindcss/cli -i ./css/input.css -o ./css/output.css --watch  
 */

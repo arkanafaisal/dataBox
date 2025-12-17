@@ -1,3 +1,11 @@
+function lockScroll(isTrue){
+    if(isTrue){
+        document.body.classList.add('overflow-hidden')
+        return
+    }
+    document.body.classList.remove('overflow-hidden')
+}
+
 function toggleSignBox(){
     const signUpCard = document.getElementById('sign-up-card');
     const signInBox = document.getElementById('sign-in-card');
@@ -46,8 +54,9 @@ function closeNewDataLayer(){
 function changeAccessIcon(newData, el){
     const lockIcon = el.children[0];
     const unlockIcon = el.children[1];
+    console.log(el)
 
-    if(newData.access === 'private'){
+    if(newData === 'private'){
         lockIcon.classList.remove('hidden');
         unlockIcon.classList.add('hidden');
     } else {

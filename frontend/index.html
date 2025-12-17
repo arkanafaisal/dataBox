@@ -83,8 +83,8 @@
 
 
     <main id="main" class="flex px-2 lg:px-4 lg:px-15">
-        <div id="data-manager-section" class="flex-1 px-2 flex flex-col">
-            <h1 class="lg:text-4xl text-2xl text-center font-bold mt-6">Data Manager</h1>
+        <div id="data-manager-section" class="flex-1 px-2 flex flex-col py-6">
+            <h1 class="lg:text-4xl text-2xl text-center font-bold">Data Manager</h1>
 
             <button onclick="showNewDataLayer()" class="mt-10 bg-green-500 hover:bg-green-600 self-end mr-2 lg:mr-6 pl-1 pr-2 text-base lg:text-2xl rounded-lg"><i class="fa-solid fa-plus"></i> new</button>
             <div id="add-data-layer" class="hidden absolute top-0 left-0 w-full h-screen bg-black/30 ">
@@ -122,26 +122,26 @@
             </div>
             -->
             
-            <ul class="grid grid-cols-[10%_20%_30%_20%_20%] lg:grid-cols-[5%_20%_50%_10%_15%] bg-black border-1 text-sm lg:text-2xl rounded-lg py-1  text-white text-center">
-    <li class="">No</li>
-    <li class="text-left">Title</li>
-    <li class="text-left">Body</li>
-    <li>Access</li>
-    <li>Actions</li>
+            <ul class="w-full border-collapse grid grid-cols-[10%_20%_50%_20%] lg:grid-cols-[5%_20%_60%_15%] bg-black border-1 text-sm lg:text-2xl rounded-lg py-1  text-white text-center">
+    <li class="border-r-1 border-white">No</li>
+    <li class="border-l-1 border-r-1 border-white lg:pl-2 text-left">Title</li>
+    <li class="border-l-1 border-r-1 border-white lg:pl-2 text-left">Body</li>
+    <li class="border-l-1 border-white">Actions</li>
 </ul>
 
-<div id="data-container" class="flex flex-col gap-2 text-xs lg:text-lg">
-    <ul id="dataNode" class="grid grid-cols-[10%_20%_30%_20%_20%] lg:grid-cols-[5%_20%_50%_10%_15%] text-center border-b-1">
+<div id="data-container" class="w-full flex flex-col gap-2 text-xs lg:text-lg">
+    <ul id="dataNode" class="w-full hidden grid grid-cols-[10%_20%_50%_20%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
         <li>1</li>
-        <li class="text-left px-1 lg:pl-2 truncate">abcdefghijklmnop</li>
-        <li class="text-left truncate">mmmmmmmmmmmmmmmmmmmmmm</li>
-        <li><button onclick="changeAccess(this)">
-            <i class="fa-solid fa-lock"></i>
-            <i class="fa-solid fa-unlock"></i>
-        </button></li>
-        <li>
-            <button class="h-4"><i class="fa-solid fa-pen-to-square"></i></button>
-            <button class="h-4"><i class="fa-solid fa-trash"></i></button>
+        <li class="text-left px-1 lg:px-3 truncate">abcdefghijklmnop \n ggdddd</li>
+        <li class="text-left truncate max-h-20 truncate-vertical lg:pl-3">mmmmmmmmmmmmmmmmmmmmmm</li>
+        <li class="flex items-center justify-center">
+            <button class="h-4"><i class="text-gray-600 fa-solid fa-copy"></i></button>
+            <div id="access-button">
+                <button class="hidden" onclick="changeAccess(this)"><i class="text-blue-500 fa-solid fa-lock"></i></button>
+                <button class="hidden" onclick="changeAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
+            </div>
+            <button class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteData(this)" class="h-4"><i class="text-red-500 fa-solid fa-trash"></i></button>
         </li>
     </ul>
 </div>
