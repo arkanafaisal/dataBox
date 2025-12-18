@@ -7,6 +7,7 @@ async function mainFunction(){
     try{
         const res = await fetching('users/me', 'POST', null, true)
         if(!res.success) return
+        addNotification('welcome back '+ res.data.username)
         showLogoutBtn(true)
         setAccountDetails(res.data.username, res.data.email, res.data.passwordLength, res.data.publicKey)
         setDataManager(token)

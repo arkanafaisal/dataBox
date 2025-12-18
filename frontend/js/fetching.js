@@ -11,6 +11,6 @@ async function fetching(endpoint, methood, body = null, isUsingToken = false){
     const developmentIP = "http://localhost:3000/"
     const productionIP = "https://databox-server.arkanafaisal.my.id/"
 
-    const response = await fetch(productionIP + endpoint, options)
+    const response = await fetch(developmentIP + endpoint, options)
     return await response.json()
 }

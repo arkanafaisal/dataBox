@@ -52,5 +52,20 @@ dataController.updateAccess = async (req, res) => {
     }
 }
 
+dataController.updateData = async (req, res) => {
+    const id = req.params.id
+    const { title, body } = req.body
+    if(!id || !title || !body) return response(res, false, 'missing field')
+    if(title.length > 16 || body.length > 1024) return response(res, false, 'invalid input length')
+    if(typeof title !== 'string' || typeof body !== 'string') return response(res, false, 'invalid input type')
+
+    try{
+        const [result] = await db.query(`UPDATE userData SET title = ?, body = ? WHERE user_id = ? AND id = ?`, [title, body, req.user.id, id])
+        console.log(result.affectedRows, result.changedRows)
+    } catch(err){
+        return response(res, false, "could not update data", null, err.code)
+    }
+}
+
 
 export default dataController;
