@@ -3,40 +3,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Box</title>
-    <link href="./css/output.css" rel="stylesheet">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+    <link href="./css/output2.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://kit.fontawesome.com/33aaf20e7f.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="notification-container" class="fixed top-14 right-4 space-y-4 z-50"></div>
     <div id="notification-node" class="hidden bg-gray-800 text-white rounded shadow-lg px-4 py-2 translate-x-[200%] transition-all duration-200 linear opacity-100"></div>
 
-    <div id="sign-layer" class="hidden absolute z-100 w-full h-full bg-black/25 flex justify-center pt-20">
-        <div id="sign-up-card" class="hidden absolute py-6 px-6 bg-white rounded-xl shadow-md">
-            <h1 id="sign-up-title" class="text-3xl font-bold">create new account</h1>
-            <form id="sign-up-form" method="POST" class="mt-8 flex flex-col gap-1">
+    <div id="sign-layer" class="hidden absolute w-full h-full bg-black/25 flex justify-center pt-20 z-101">
+        <div id="sign-up-card" class="hidden absolute py-4 lg:py-6 px-6 bg-white rounded-xl shadow-md">
+            <h1 id="sign-up-title" class=" text-2xl lg:text-3xl font-bold text-center">create new account</h1>
+            <form id="sign-up-form" method="POST" class="mt-5 lg:mt-8 flex flex-col gap-1 text-sm lg:text-base">
                 <input name="usernameInput" type="text" maxlength="32" required placeholder="username" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
                 <input name="emailInput" type="text" maxlength="64" placeholder="email (optional)" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
                 <input name="passwordInput" type="password" maxlength="128" required placeholder="password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
                 <input name="confirmPasswordInput" type="password" maxlength="128" required placeholder="confirm password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
 
-                <input type="submit" value="Create Account" class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-lg py-1 px-3 mt-6 rounded-xl text-white">
+                <input type="submit" value="Create Account" class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-base lg:text-lg py-1 px-3 mt-4 lg:mt-6 rounded-xl text-white">
 
-                <div class="flex gap-2 items-center text-sm pl-2">
+                <div class="flex gap-2 items-center text-xs lg:text-sm pl-2">
                     <p>have account already?</p>
                     <a class="text-blue-600 cursor-pointer hover:text-blue-900" onclick="toggleSignBox()">login</a>
                 </div>
             </form>
         </div>
-        <div id="sign-in-card" class=" absolute py-6 px-6 bg-white rounded-xl shadow-md">
-            <h1 id="sign-in-title" class="text-3xl font-bold">welcome back! login</h1>
-            <form id="sign-in-form" method="POST" class="mt-8 flex flex-col gap-1">
+        <div id="sign-in-card" class=" absolute py-4 lg:py-6 px-6 bg-white rounded-xl shadow-md">
+            <h1 id="sign-in-title" class="text-2xl lg:text-3xl font-bold text-center">welcome back! login</h1>
+            <form id="sign-in-form" method="POST" class="mt-5 lg:mt-8 flex flex-col gap-1 text-sm lg:text-base">
                 <input name="usernameOrEmailInput" type="text" maxlength="32" required placeholder="username or email" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
                 <input name="passwordInput" type="password" maxlength="128" required placeholder="password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
 
-                <input type="submit" value="Enter Account" class="bg-green-600 hover:bg-green-700 cursor-pointer text-lg py-1 px-3 mt-6 rounded-xl text-white">
+                <input type="submit" value="Enter Account" class="bg-green-600 hover:bg-green-700 cursor-pointer text-base lg:text-lg py-1 px-3 mt-4 lg:mt-6 rounded-xl text-white">
 
-                <div class="flex gap-2 items-center text-sm pl-2">
+                <div class="flex gap-2 items-center text-xs lg:text-sm pl-2">
                     <p>don't have account?</p>
                     <a class="text-blue-600 cursor-pointer hover:text-blue-900" onclick="toggleSignBox()">signup</a>
                 </div>
@@ -53,7 +53,7 @@
 
         <div class="relative mr-4 lg:mr-16">
             <button id="account-details-button" onclick="toggleAccountDetails()" class="hidden flex items-center"><i class="fa-solid fa-user text-3xl mt-1"></i><h2 class="text-2xl hidden lg:block">account</h2></button>
-            <div id="account-card" class="hidden absolute top-10 -left-15 translate-x-[0%] bg-gray-200 w-40 lg:w-60 px-3 py-2 border-black/40 shadow-md border-1 rounded-xl z-100">
+            <div id="account-card" class="hidden absolute top-10 -left-2 lg:-left-15 -translate-x-[50%] bg-gray-200 w-40 lg:w-60 px-3 py-2 border-black/40 shadow-md border-1 rounded-xl z-100">
                 <h1 class="text-base lg:text-xl text-center">Account Details</h1>
                 <div class="flex gap-1 text-xs lg:text-base mt-2 lg:mt-4">
                     <ul>
@@ -77,9 +77,9 @@
                         <li><button><i class="text-xs fa-solid fa-pen"></i></button></li>
                     </ul>
                 </div>
-                <div id="other" class="flex justify-between text-base lg:text-xl mt-2 lg:mt-4 px-1">
-                    <button class="hover:text-black/50 hidden"><i class="fa-solid fa-share-from-square"></i> share</button>
-                    <div id="sign-options" class="flex justify-center  ">
+                <div id="other" class="flex justify-between text-sm lg:text-xl mt-2 lg:mt-4 lg:px-1">
+                    <button id="share-profile-button" class="hover:text-black/50 hidden"><i class="fa-solid fa-share-from-square"></i> share</button>
+                    <div id="sign-options" class="flex justify-center ">
                         <a id="logout-btn" class="hidden cursor-pointer hover:text-black/50" onclick="LogoutBtnHandler()"><i class="fa-solid fa-right-to-bracket"></i> logout</a>
                         <a id="login-btn" class="cursor-pointer hover:text-black/50" onclick="loginBtnHandler()"><i class="fa-solid fa-right-to-bracket"></i> login</a>
                     </div>
@@ -90,8 +90,8 @@
     </header>
 
 
-    <div id="account-warning" class="hidden bg-red-300 text-black px-20 py-1 flex">
-        <h3 id="account-warning-text" class="flex-1"></h3>
+    <div id="account-warning" class="hidden bg-red-300 text-black px-4 lg:px-20 py-1 flex">
+        <h3 id="account-warning-text" class="flex-1 text-xs lg:text-base"></h3>
         <button onclick="closeAccountWarning()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <main id="main" class="flex flex-col px-2 lg:px-4 lg:px-15">
@@ -100,66 +100,45 @@
 
             <button onclick="openNewDataLayer()" class="mt-10 bg-green-500 hover:bg-green-600 self-end mr-2 lg:mr-6 pl-1 pr-2 text-base lg:text-2xl rounded-lg"><i class="fa-solid fa-plus"></i> new</button>
             <div id="add-data-layer" class="hidden absolute top-0 left-0 w-full h-screen bg-black/30 ">
-                <div class="mt-30 px-6 py-3 bg-white rounded-xl border-1 w-100 mx-auto">
-                    <h1 class="text-3xl text-center">create new data</h1>
+                <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:w-100">
+                    <h1 class="text-2xl lg:text-3xl text-center">create new data</h1>
                     <form id="add-data-form" method="POST" class="mt-6 flex flex-col gap-2">
-                        <input type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-1/2">
-                        <textarea name="body" placeholder="body" rows="2" required class="border-1 rounded-xl px-2 py-1"></textarea>
-                        <div class="flex justify-between mt-4">
-                            <button onclick="closeNewDataLayer()" type="button" class="text-lg bg-red-500 hover:bg-red-600 px-5 py-1 rounded-xl h-fit">cancel</button>
-                            <input type="submit" value="add now" class="bg-green-500 hover:bg-green-600 px-5 py-1 text-lg rounded-xl cursor-pointer">
+                        <input type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-2/3 lg:w-1/2">
+                        <textarea name="body" placeholder="body" rows="3" required class="border-1 rounded-xl px-2 py-1 text-xs lg:text-base"></textarea>
+                        <div class="flex justify-between mt-4 text-base lg:text-lg">
+                            <button onclick="closeNewDataLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                            <input type="submit" value="add now" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                         </div>
                     </form>
                 </div>
             </div>
             <div id="edit-data-layer" class="hidden absolute top-0 left-0 w-full h-screen bg-black/30 ">
-                <div class="mt-30 px-6 py-3 bg-white rounded-xl border-1 w-100 mx-auto">
-                    <h1 class="text-3xl text-center">edit data</h1>
+                <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:w-100">
+                    <h1 class="text-2xl lg:text-3xl text-center">edit data</h1>
                     <form id="edit-data-form" method="POST" class="mt-6 flex flex-col gap-2">
-                        <input id="edit-data-title" type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-1/2">
-                        <textarea id="edit-data-body" name="body" placeholder="body" rows="2" required class="border-1 rounded-xl px-2 py-1"></textarea>
-                        <div class="flex justify-between mt-4">
-                            <button onclick="closeEditDataLayer()" type="button" class="text-lg bg-red-500 hover:bg-red-600 px-5 py-1 rounded-xl h-fit">cancel</button>
-                            <input type="submit" value="add now" class="bg-green-500 hover:bg-green-600 px-5 py-1 text-lg rounded-xl cursor-pointer">
+                        <input id="edit-data-title" type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-2/3 lg:w-1/2">
+                        <textarea id="edit-data-body" name="body" placeholder="body" rows="3" required class="border-1 rounded-xl px-2 py-1 text-xs lg:text-base"></textarea>
+                        <div class="flex justify-between mt-4 text-base lg:text-lg">
+                            <button onclick="closeEditDataLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                            <input type="submit" value="save edit" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                         </div>
                     </form>
                 </div>
             </div>
-
-            <!--
-            <ul class=" flex gap-1 bg-black border-1 text-sm lg:text-2xl rounded-lg py-1 lgpx-1 text-white text-center">
-                <li class="flex-3">No</li>
-                <li class="flex-16 text-left">Title</li>
-                <li class="flex-24 text-left pl-2">Value</li>
-                <li class="flex-4">Access</li>
-                <li class="flex-6">Actions</li>
-            </ul>
-            <div id="data-container" class="flex flex-col gap-2 text-xs lg:text-lg">
-                <ul class="flex gap-1 text-center border-b-1">
-                    <li class="flex-3">1</li>
-                    <li class="flex-12 text-left pl-2 truncate">lepreeeeeeeee</li>
-                    <li class="flex-24 text-left lg:pl-2">oi</li>
-                    <li class="flex-4"><button><i class="fa-solid fa-lock"></i></button></li>
-                    <li class="flex-6">
-                        <button class="h-4"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="h-4"><i class="fa-solid fa-trash"></i></button>
-                    </li>
-                </ul>
-            </div>
-            -->
             
-            <ul class="w-full border-collapse grid grid-cols-[10%_20%_50%_20%] lg:grid-cols-[5%_20%_60%_15%] bg-black border-1 text-sm lg:text-2xl rounded-lg py-1  text-white text-center">
+            
+            <ul class="w-full border-collapse grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] bg-black border-1 text-sm lg:text-2xl rounded-lg py-1  text-white text-center">
     <li class="">No</li>
-    <li class="border-l-1 border-r-1 border-white lg:pl-2 text-left">Title</li>
-    <li class="border-r-1 border-white lg:pl-2 text-left">Body</li>
+    <li class="border-l-1 border-r-1 border-white pl-[2px] lg:pl-2 text-left">Title</li>
+    <li class="border-r-1 border-white pl-[2px] lg:pl-2 text-left">Body</li>
     <li class="">Actions</li>
 </ul>
 
 <div id="data-container" class="w-full flex flex-col gap-2 text-xs lg:text-lg">
-    <ul id="data-node" class="w-full hidden grid grid-cols-[10%_20%_50%_20%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
+    <ul id="data-node" class="w-full hidden grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
         <li>1</li>
-        <li id="data-title" class="text-left px-1 lg:px-3 truncate">abcdefghijklmnop \n ggdddd</li>
-        <li id="data-body" class="text-left truncate max-h-20 truncate-vertical lg:pl-3">mmmmmmmmmmmmmmmmmmmmmm</li>
+        <li id="data-title" class="text-left pl-1 pr-1 lg:px-3 truncate">abcdefghijklmnop \n ggdddd</li>
+        <li id="data-body" class="text-left truncate max-h-20 truncate-vertical pl-1 lg:pl-3">mmmmmmmmmmmmmmmmmmmmmm</li>
         <li class="flex items-center justify-center">
             <button onclick="copyData(this)" class="h-4"><i class="text-gray-600 fa-solid fa-copy"></i></button>
             <div id="access-button">
@@ -171,7 +150,7 @@
         </li>
     </ul>
 </div>
-            
+
         </div>
 
         <div id="public-data-section" class="hidden flex-1 px-2 flex flex-col py-6 items-center">
@@ -189,7 +168,7 @@
                     <h2 id="public-data-title" class="text-lg py-1 px-2 bg-yellow-300 py-2 border-1 rounded-xl flex-1">asede kontol</h2>
                     <button onclick="copyPublicData(this)" class=" px-3 h-full  ">copy</button>
                 </div>
-                
+
             </div>
         </div>
     </main>
