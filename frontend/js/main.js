@@ -8,7 +8,7 @@ async function mainFunction(hashUsername){
         return
     }
     const token = localStorage.getItem("token")
-    if(!token) return
+    if(!token) return showAccountDetailsButton()
     try{
         const res = await fetching('users/me', 'POST', null, true)
         if(!res.success) return addNotification('could not get your data')
@@ -25,12 +25,20 @@ async function mainFunction(hashUsername){
     }
 }
 
+function setShareProfileBtn(username){
+    const shareBtn = document.getElementById("share-profile-button")
+    shareBtn.classList.remove("hidden")
+    const profileLink = "databox.arkanafaisal.my.id/#/profile/" + username
+    shareBtn.onclick = ()=>{navigator.clipboard.writeText(profileLink)}
+}
+
 function setAccountDetails(username, email, publicKey){
     const accountDetails = document.getElementById("account-details").children
     accountDetails[0].innerText = username
     accountDetails[1].innerText = email || ''
     accountDetails[2].innerText = publicKey || ''
     setAccountWarning(email, publicKey)
+    setShareProfileBtn(username)
     return
 }
 
@@ -88,8 +96,6 @@ function router() {
     mainFunction(hashUsername)
 }
 
-window.addEventListener("hashchange", router);
+window.addEventListener("hashchange", ()=>{window.location.reload()});
 window.addEventListener("load", router);
-
-
 
