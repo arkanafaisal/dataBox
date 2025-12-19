@@ -40,7 +40,10 @@ editDataForm.addEventListener('submit', async (e)=>{
 
     try{
         const res = await fetching(`data/edit/${datas.id}`, 'PATCH', datas, true)
-        console.log(res)
+        if(!res.success) return addNotification(res.message)
+        addNotification(res.message)
+        closeEditDataLayer()
+        editDataForm.reset()
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)

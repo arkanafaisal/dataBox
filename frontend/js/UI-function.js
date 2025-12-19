@@ -36,6 +36,10 @@ function showLogoutBtn(ifYes){
     }
 }
 
+function showShareButton(){
+    const shareBtn = document.getElementById('share-button')
+}
+
 function toggleAccountDetails(){
     const accountCard = document.getElementById('account-card');
     accountCard.classList.toggle('hidden');
@@ -107,4 +111,29 @@ function addNotification(message) {
         notification.classList.add('opacity-0'); // fade out
         setTimeout(() => notification.remove(), 300); // remove after fade out
     }, 3000);
+}
+
+function showDashboardSection(){
+    const dashboardSection = document.getElementById('dashboard-section')
+    console.log(dashboardSection)
+    dashboardSection.classList.remove('hidden')
+}
+
+function showAccountDetailsButton(){
+    const accountDetailsButton = document.getElementById('account-details-button')
+    accountDetailsButton.classList.remove('hidden')
+}
+
+function showPublicDataSection(){
+    const publicDataSection = document.getElementById('public-data-section')
+    publicDataSection.classList.remove('hidden')
+}
+
+function closeAccountWarning(){
+    const accountWarning = document.getElementById('account-warning')
+    accountWarning.remove()
+}
+
+function setPublicDataOwner(username){
+    document.getElementById('public-data-owner').innerText = username + "'s public data"
 }

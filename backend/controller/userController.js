@@ -7,7 +7,7 @@ const userController = {}
 userController.getMe = async (req, res)=>{
     const {id, username} = req.user;
     try{
-        const [result] = await db.query('SELECT id, username, email FROM users WHERE id = ?', [id]);
+        const [result] = await db.query('SELECT username, email, publicKey FROM users WHERE id = ?', [id]);
         if(result.length === 0){return response(res, false, 'user not found')}
         return response(res, true, 'user retrieved', result[0])
     } catch(err) {

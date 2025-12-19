@@ -46,38 +46,43 @@
 
 
     <header id="header" class="h-12 lg:px-16 px-6 bg-yellow-300 flex items-center">
-        <div id="dashboard-section" class="flex gap-2 flex-1 items-center">
+        <a href="" id="" class="flex gap-2 flex-1 items-center cursor-pointer">
             <i class="fa-solid fa-box-open text-3xl"></i>
             <h1 class="font-bold text-xl lg:text-3xl">databox</h1>
-        </div>
+        </a>
 
         <div class="relative mr-4 lg:mr-16">
-            <button onclick="toggleAccountDetails()"><i class="fa-solid fa-user text-3xl mt-1"></i></button>
-            <div id="account-card" class="hidden absolute top-10 left-0 -translate-x-1/2 bg-gray-200 w-40 lg:w-60 px-3 py-2 border-black/40 shadow-md border-1 rounded-xl z-100">
+            <button id="account-details-button" onclick="toggleAccountDetails()" class="hidden flex items-center"><i class="fa-solid fa-user text-3xl mt-1"></i><h2 class="text-2xl hidden lg:block">account</h2></button>
+            <div id="account-card" class="hidden absolute top-10 -left-15 translate-x-[0%] bg-gray-200 w-40 lg:w-60 px-3 py-2 border-black/40 shadow-md border-1 rounded-xl z-100">
                 <h1 class="text-base lg:text-xl text-center">Account Details</h1>
                 <div class="flex gap-1 text-xs lg:text-base mt-2 lg:mt-4">
                     <ul>
                         <li>username</li>
                         <li>email</li>
-                        <li>password</li>
                         <li>public key</li>
                     </ul>
                     <ul>
                         <li>:</li>
                         <li>:</li>
                         <li>:</li>
-                        <li>:</li>
                     </ul>
-                    <ul id="account-details" class="ml-2">
+                    <ul id="account-details" class="ml-2 flex-1">
                         <li></li>
                         <li></li>
                         <li></li>
-                        <li></li>
+                    </ul>
+                    <ul>
+                        <li><button><i class="text-xs fa-solid fa-pen"></i></button></li>
+                        <li><button><i class="text-xs fa-solid fa-pen"></i></button></li>
+                        <li><button><i class="text-xs fa-solid fa-pen"></i></button></li>
                     </ul>
                 </div>
-                <div id="sign-options" class="flex justify-center text-base lg:text-xl mt-2 lg:mt-4">
-                    <a id="logout-btn" class="hidden cursor-pointer hover:text-black/50" onclick="LogoutBtnHandler()"><i class="fa-solid fa-right-to-bracket"></i> logout</a>
-                    <a id="login-btn" class="cursor-pointer hover:text-black/50" onclick="loginBtnHandler()"><i class="fa-solid fa-right-to-bracket"></i> login</a>
+                <div id="other" class="flex justify-between text-base lg:text-xl mt-2 lg:mt-4 px-1">
+                    <button class="hover:text-black/50 hidden"><i class="fa-solid fa-share-from-square"></i> share</button>
+                    <div id="sign-options" class="flex justify-center  ">
+                        <a id="logout-btn" class="hidden cursor-pointer hover:text-black/50" onclick="LogoutBtnHandler()"><i class="fa-solid fa-right-to-bracket"></i> logout</a>
+                        <a id="login-btn" class="cursor-pointer hover:text-black/50" onclick="loginBtnHandler()"><i class="fa-solid fa-right-to-bracket"></i> login</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,8 +90,12 @@
     </header>
 
 
-    <main id="main" class="flex px-2 lg:px-4 lg:px-15">
-        <div id="data-manager-section" class="flex-1 px-2 flex flex-col py-6">
+    <div id="account-warning" class="hidden bg-red-300 text-black px-20 py-1 flex">
+        <h3 id="account-warning-text" class="flex-1"></h3>
+        <button onclick="closeAccountWarning()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <main id="main" class="flex flex-col px-2 lg:px-4 lg:px-15">
+        <div id="dashboard-section" class="hidden flex-1 px-2 flex flex-col py-6">
             <h1 class="lg:text-4xl text-2xl text-center font-bold">Data Manager</h1>
 
             <button onclick="openNewDataLayer()" class="mt-10 bg-green-500 hover:bg-green-600 self-end mr-2 lg:mr-6 pl-1 pr-2 text-base lg:text-2xl rounded-lg"><i class="fa-solid fa-plus"></i> new</button>
@@ -165,7 +174,24 @@
             
         </div>
 
+        <div id="public-data-section" class="hidden flex-1 px-2 flex flex-col py-6 items-center">
+            <h1 id="public-data-owner" class="lg:text-4xl text-2xl text-center font-bold"></h1>
 
+
+            <form id="public-data-form" class="mt-10 text-base lg:text-xl items-center">
+                <label for="#public-key-input">public key : </label>
+                <input type="password" name="publicKeyInput" id="public-key-input" required maxlength="255" class="border-1 text-lg rounded-md px-2">
+                <input type="submit" value="verify" class="bg-blue-500 border-1 rounded-lg text-xl px-2 cursor-pointer text-white">
+            </form>
+
+            <div id="public-data-container" class="hidden w-full mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div id="public-data-node" class="hidden bg-green-400 rounded-xl flex justify-between items-center ">
+                    <h2 id="public-data-title" class="text-lg py-1 px-2 bg-yellow-300 py-2 border-1 rounded-xl flex-1">asede kontol</h2>
+                    <button onclick="copyPublicData(this)" class=" px-3 h-full  ">copy</button>
+                </div>
+                
+            </div>
+        </div>
     </main>
 
 
@@ -206,5 +232,6 @@
     <script src="./js/sign.js"></script>
     <script src="./js/data.js"></script>
     <script src="./js/main.js"></script>
+    <script src="./js/publicData.js"></script>
 </body>
 </html>

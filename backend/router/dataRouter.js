@@ -13,5 +13,6 @@ dataRouter.get('/me', jwtVerify, dataController.getMyData)
 dataRouter.delete('/delete/:id', jwtVerify, dataController.deleteData)
 dataRouter.post('/update/access/:id', jwtVerify, dataController.updateAccess)
 dataRouter.patch('/edit/:id', jwtVerify, dataController.updateData)
+dataRouter.post('/profile/:username', dataController.getPublicData)
 
 export default dataRouter;
