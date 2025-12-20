@@ -29,16 +29,11 @@ async function mainFunction(hashUsername){
 function setAccountDetails(username, email, publicKey){
     const accountDetails = document.getElementById("account-details").children
     accountDetails[0].innerText = username
-    accountDetails[1].innerText = email || "buffer"
+    accountDetails[1].innerText = email || "none"
     if(!email) accountDetails[1].classList.add('opacity-0')
     accountDetails[2].innerText = publicKey || ''
     setAccountWarning(email, publicKey)
     setShareProfileBtn(username)
-
-    if(email) {
-        document.getElementById('profile-email').classList.add('opacity-0', 'pointer-events-none')
-        document.getElementById('profile-email').onclick = null
-    }
     return
 }
 

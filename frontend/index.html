@@ -59,6 +59,20 @@
             </div>
         </div>
 
+        <div id="edit-email-layer" class="hidden fixed h-screen w-full bg-black/40 top-0 left-0 z-200">
+            <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-80">
+                <h1 class="text-2xl lg:text-3xl text-center">edit email</h1>
+                <form id="edit-email-form" method="POST" class="mt-6 flex flex-col gap-2 text-base">
+                    <input type="text" name="newEmail" placeholder="new email" maxlength="64" required class="border-1 rounded-lg px-2 py-1 w-full">
+                    <input type="password" name="password" placeholder="password" maxlength="255" required class="border-1 rounded-lg px-2 py-1 w-full">
+                    <div class="flex justify-between mt-4 text-base lg:text-lg">
+                        <button onclick="closeEditEmailLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                        <input type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div id="edit-public-key-layer" class="hidden fixed h-screen w-full bg-black/40 top-0 left-0 z-200">
             <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-80">
                 <h1 class="text-2xl lg:text-3xl text-center">edit public key</h1>
@@ -101,7 +115,7 @@
                     </ul>
                     <ul class="w-[5%]">
                         <li><button onclick="openEditUsernameLayer()"><i class="text-xs fa-solid fa-pen"></i></button></li>
-                        <li><button id="profile-email" onclick="openAddEmailLayer()"><i class="text-xs fa-solid fa-plus"></i></button></li>
+                        <li><button id="profile-email" onclick="openEditEmailLayer()"><i class="text-xs fa-solid fa-pen"></i></button></li>
                         <li><button onclick="openEditPublicKeyLayer()"><i class="text-xs fa-solid fa-pen"></i></button></li>
                     </ul>
                 </div>

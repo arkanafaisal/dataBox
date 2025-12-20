@@ -171,7 +171,12 @@ function closeEditPublicKeyLayer(){
     editPublicKeyLayer.classList.add('hidden')
 }
 
-function openAddEmailLayer(){
-    alert("this feature isn't added yet")
-    // const AddEmailLayer = document.getElementById('add-emai;-layer')
+function openEditEmailLayer(){
+    const editEmailLayer = document.getElementById('edit-email-layer')
+    editEmailLayer.classList.remove('hidden')
+}
+
+function closeEditEmailLayer(){
+    const editEmailLayer = document.getElementById('edit-email-layer')
+    editEmailLayer.classList.add('hidden')
 }

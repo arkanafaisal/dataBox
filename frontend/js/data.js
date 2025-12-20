@@ -76,10 +76,30 @@ editUsernameForm.addEventListener('submit', async (e)=>{
         addNotification('error occured, please try again')
         console.log(err)
     }
+})
 
-    
+const editEmailForm = document.getElementById('edit-email-form')
+editEmailForm.addEventListener('submit', async (e)=>{
+    e.preventDefault()
 
-    console.log(fetchBody)
+    const newEmail = editEmailForm.newEmail.value
+    const password = editEmailForm.password.value
+
+    if(newEmail.length > 32 || password.length > 255){
+        addNotification('invalid data length')
+        return
+    }
+
+    try{
+        const res = await fetching(`users/email`, 'PATCH', {newEmail, password}, true)
+        if(!res.success) return addNotification(res.message)
+        addNotification(res.message)
+        closeEditEmailLayer()
+        editEmailForm.reset()
+    }catch(err){
+        addNotification('error occured, please try again')
+        console.log(err)
+    }
 })
 
 const editPublicKeyForm = document.getElementById('edit-public-key-form')
