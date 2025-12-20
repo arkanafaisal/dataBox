@@ -30,7 +30,7 @@ editDataForm.addEventListener('submit', async (e)=>{
     const datas = {
         id: editDataForm.dataset.currentID,
         title: editDataForm.title.value.trim(),
-        body:editDataForm.body.value.trim()
+        body:editDataForm.body.value
     }
 
     if(datas.title.length > 16 || datas.body.length > 1024){
