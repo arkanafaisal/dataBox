@@ -115,7 +115,6 @@ function addNotification(message) {
 
 function showDashboardSection(){
     const dashboardSection = document.getElementById('dashboard-section')
-    console.log(dashboardSection)
     dashboardSection.classList.remove('hidden')
 }
 
@@ -136,4 +135,43 @@ function closeAccountWarning(){
 
 function setPublicDataOwner(username){
     document.getElementById('public-data-owner').innerText = username + "'s public data"
+}
+
+function setShareProfileBtn(username){
+    const shareBtn = document.getElementById("share-profile-button")
+    shareBtn.classList.remove("hidden")
+    const profileLink = "databox.arkanafaisal.my.id/#/profile/" + username
+    shareBtn.onclick = async ()=>{
+        try{
+            await navigator.clipboard.writeText(profileLink)
+            addNotification('profile link copied')
+        } catch{
+            addNotification('failed to copy')
+        }
+    }
+}
+
+function openEditUsernameLayer(){
+    const editUsernameLayer = document.getElementById('edit-username-layer')
+    editUsernameLayer.classList.remove('hidden')
+}
+
+function closeEditUsernameLayer(){
+    const editUsernameLayer = document.getElementById('edit-username-layer')
+    editUsernameLayer.classList.add('hidden')
+}
+
+function openEditPublicKeyLayer(){
+    const editPublicKeyLayer = document.getElementById('edit-public-key-layer')
+    editPublicKeyLayer.classList.remove('hidden')
+}
+
+function closeEditPublicKeyLayer(){
+    const editPublicKeyLayer = document.getElementById('edit-public-key-layer')
+    editPublicKeyLayer.classList.add('hidden')
+}
+
+function openAddEmailLayer(){
+    alert("this feature isn't added yet")
+    // const AddEmailLayer = document.getElementById('add-emai;-layer')
 }

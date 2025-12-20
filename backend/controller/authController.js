@@ -6,17 +6,20 @@ import response from '../response.js';
 const authController = {}
 
 authController.register = async (req, res)=>{
-    const {username, password} = req.body;
+    const {username, password} = req.body
+    let email = req.body.email
+    if(!email) email = ''
     if(!username || !password){return response(res, false, 'missing fields')}
-    if(typeof username !== 'string' || typeof password !== 'string'){return response(res, false, 'invalid username or password')}
-    if(username.length > 32 || password.length > 255){return response(res, false, 'invalid input length')}
+    if(typeof username !== 'string' || typeof password !== 'string' || typeof email !== 'string'){return response(res, false, 'invalid username or password')}
+    if(username.length > 32 || password.length > 255 || email.length > 64){return response(res, false, 'invalid input length')}
     
     try{
-        const [existingUser] = await db.query('SELECT id FROM users WHERE username = ?', [username])
+        const [existingUser] = await db.query('SELECT id FROM users WHERE (username = ? OR email = ?)', [username, email])
         if(existingUser.length > 0){return response(res, false, 'username already taken')}
-        const [result] = await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, password]);
+        const [result] = await db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, password]);
         return response(res, true, 'user created')
     } catch(error) {
+        console.log(error.code)
         return response(res, false, 'could not create user', null, error.code)
     }
 }

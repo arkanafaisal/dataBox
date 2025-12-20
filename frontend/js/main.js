@@ -25,20 +25,20 @@ async function mainFunction(hashUsername){
     }
 }
 
-function setShareProfileBtn(username){
-    const shareBtn = document.getElementById("share-profile-button")
-    shareBtn.classList.remove("hidden")
-    const profileLink = "databox.arkanafaisal.my.id/#/profile/" + username
-    shareBtn.onclick = ()=>{navigator.clipboard.writeText(profileLink)}
-}
 
 function setAccountDetails(username, email, publicKey){
     const accountDetails = document.getElementById("account-details").children
     accountDetails[0].innerText = username
-    accountDetails[1].innerText = email || ''
+    accountDetails[1].innerText = email || "buffer"
+    if(!email) accountDetails[1].classList.add('opacity-0')
     accountDetails[2].innerText = publicKey || ''
     setAccountWarning(email, publicKey)
     setShareProfileBtn(username)
+
+    if(email) {
+        document.getElementById('profile-email').classList.add('opacity-0', 'pointer-events-none')
+        document.getElementById('profile-email').onclick = null
+    }
     return
 }
 
@@ -68,10 +68,10 @@ async function setDataManager(){
 
     try{
         const res = await fetching('data/me', 'GET', null, true)
-        console.log(res)
-        if(!res.success) return
+        if(!res.success) return addNotification(res.message)
         setMyData(res.data)
     } catch(err){
+        addNotification(err)
         console.log(err)
     }
 }

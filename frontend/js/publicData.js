@@ -22,6 +22,10 @@ publicDataForm.addEventListener('submit', async (e)=>{
 })
 
 function setPublicData(datas){
+    if(datas.length === 0){
+        document.getElementById('null-public-data-text').classList.remove('hidden')
+        return
+    }
     const publicDataContainer = document.getElementById('public-data-container')
     publicDataContainer.classList.remove('hidden')
 

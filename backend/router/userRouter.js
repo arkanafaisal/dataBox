@@ -10,6 +10,8 @@ userRouter.use('/', (req, res, next)=>{
 });
 
 userRouter.post('/me', jwtVerify, userController.getMe);
+userRouter.patch('/username', jwtVerify, userController.editUsername);
+userRouter.patch('/public-key', jwtVerify, userController.editPublicKey);
 
 
 

@@ -3,12 +3,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Box</title>
-    <link href="./css/output2.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="./css/output.css" rel="stylesheet">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
     <script src="https://kit.fontawesome.com/33aaf20e7f.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div id="notification-container" class="fixed top-14 right-4 space-y-4 z-50"></div>
+    <div id="notification-container" class="fixed top-14 right-4 space-y-4 z-300"></div>
     <div id="notification-node" class="hidden bg-gray-800 text-white rounded shadow-lg px-4 py-2 translate-x-[200%] transition-all duration-200 linear opacity-100"></div>
 
     <div id="sign-layer" class="hidden absolute w-full h-full bg-black/25 flex justify-center pt-20 z-101">
@@ -44,37 +44,65 @@
         </div>
     </div>
 
+    <ul>
+        <div id="edit-username-layer" class="hidden fixed h-screen w-full bg-black/40 top-0 left-0 z-200">
+            <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-80">
+                <h1 class="text-2xl lg:text-3xl text-center">edit username</h1>
+                <form id="edit-username-form" method="POST" class="mt-6 flex flex-col gap-2 text-base">
+                    <input type="text" name="newUsername" placeholder="new username" maxlength="32" required class="border-1 rounded-lg px-2 py-1 w-full">
+                    <input type="password" name="password" placeholder="password" maxlength="255" required class="border-1 rounded-lg px-2 py-1 w-full">
+                    <div class="flex justify-between mt-4 text-base lg:text-lg">
+                        <button onclick="closeEditUsernameLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                        <input type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                    </div>
+                </form>
+            </div>
+        </div>
 
+        <div id="edit-public-key-layer" class="hidden fixed h-screen w-full bg-black/40 top-0 left-0 z-200">
+            <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-80">
+                <h1 class="text-2xl lg:text-3xl text-center">edit public key</h1>
+                <form id="edit-public-key-form" method="POST" class="mt-6 flex flex-col gap-2 text-base">
+                    <input type="text" name="newPublicKey" placeholder="new public key" maxlength="32" required class="border-1 rounded-lg px-2 py-1 w-full">
+                    <div class="flex justify-between mt-4 text-base lg:text-lg">
+                        <button onclick="closeEditPublicKeyLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                        <input type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ul>
+    
     <header id="header" class="h-12 lg:px-16 px-6 bg-yellow-300 flex items-center">
         <a href="" id="" class="flex gap-2 flex-1 items-center cursor-pointer">
             <i class="fa-solid fa-box-open text-3xl"></i>
             <h1 class="font-bold text-xl lg:text-3xl">databox</h1>
         </a>
-
+        
         <div class="relative mr-4 lg:mr-16">
             <button id="account-details-button" onclick="toggleAccountDetails()" class="hidden flex items-center"><i class="fa-solid fa-user text-3xl mt-1"></i><h2 class="text-2xl hidden lg:block">account</h2></button>
-            <div id="account-card" class="hidden absolute top-10 -left-2 lg:-left-15 -translate-x-[50%] bg-gray-200 w-40 lg:w-60 px-3 py-2 border-black/40 shadow-md border-1 rounded-xl z-100">
+            <div id="account-card" class="hidden absolute top-10 -left-2 lg:-left-15 -translate-x-[50%] lg:-translate-x-0 bg-gray-200 w-40 lg:w-60 px-3 py-2 border-black/40 shadow-md border-1 rounded-xl z-100">
                 <h1 class="text-base lg:text-xl text-center">Account Details</h1>
                 <div class="flex gap-1 text-xs lg:text-base mt-2 lg:mt-4">
-                    <ul>
+                    <ul class="w-[40%] lg:w-[35%]">
                         <li>username</li>
                         <li>email</li>
                         <li>public key</li>
                     </ul>
-                    <ul>
+                    <ul class="w-[3%]">
                         <li>:</li>
                         <li>:</li>
                         <li>:</li>
                     </ul>
-                    <ul id="account-details" class="ml-2 flex-1">
+                    <ul id="account-details" class="w-[45%] lg:w-[50%]">
                         <li></li>
-                        <li></li>
+                        <li class="truncate"></li>
                         <li></li>
                     </ul>
-                    <ul>
-                        <li><button><i class="text-xs fa-solid fa-pen"></i></button></li>
-                        <li><button><i class="text-xs fa-solid fa-pen"></i></button></li>
-                        <li><button><i class="text-xs fa-solid fa-pen"></i></button></li>
+                    <ul class="w-[5%]">
+                        <li><button onclick="openEditUsernameLayer()"><i class="text-xs fa-solid fa-pen"></i></button></li>
+                        <li><button id="profile-email" onclick="openAddEmailLayer()"><i class="text-xs fa-solid fa-plus"></i></button></li>
+                        <li><button onclick="openEditPublicKeyLayer()"><i class="text-xs fa-solid fa-pen"></i></button></li>
                     </ul>
                 </div>
                 <div id="other" class="flex justify-between text-sm lg:text-xl mt-2 lg:mt-4 lg:px-1">
@@ -100,7 +128,7 @@
 
             <button onclick="openNewDataLayer()" class="mt-10 bg-green-500 hover:bg-green-600 self-end mr-2 lg:mr-6 pl-1 pr-2 text-base lg:text-2xl rounded-lg"><i class="fa-solid fa-plus"></i> new</button>
             <div id="add-data-layer" class="hidden absolute top-0 left-0 w-full h-screen bg-black/30 ">
-                <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:w-100">
+                <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-100">
                     <h1 class="text-2xl lg:text-3xl text-center">create new data</h1>
                     <form id="add-data-form" method="POST" class="mt-6 flex flex-col gap-2">
                         <input type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-2/3 lg:w-1/2">
@@ -113,7 +141,7 @@
                 </div>
             </div>
             <div id="edit-data-layer" class="hidden absolute top-0 left-0 w-full h-screen bg-black/30 ">
-                <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:w-100">
+                <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-100">
                     <h1 class="text-2xl lg:text-3xl text-center">edit data</h1>
                     <form id="edit-data-form" method="POST" class="mt-6 flex flex-col gap-2">
                         <input id="edit-data-title" type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-2/3 lg:w-1/2">
@@ -154,16 +182,17 @@
         </div>
 
         <div id="public-data-section" class="hidden flex-1 px-2 flex flex-col py-6 items-center">
-            <h1 id="public-data-owner" class="lg:text-4xl text-2xl text-center font-bold"></h1>
+            <h1 id="public-data-owner" class="lg:text-4xl text-2xl text-center font-bold lg:mt-10"></h1>
 
 
-            <form id="public-data-form" class="mt-10 text-base lg:text-xl items-center">
+            <form id="public-data-form" class="mt-10 lg:mt-18 text-base lg:text-xl items-center">
                 <label for="#public-key-input">public key : </label>
                 <input type="password" name="publicKeyInput" id="public-key-input" required maxlength="255" class="border-1 text-lg rounded-md px-2">
                 <input type="submit" value="verify" class="bg-blue-500 border-1 rounded-lg text-xl px-2 cursor-pointer text-white">
             </form>
 
-            <div id="public-data-container" class="hidden w-full mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <h2 id="null-public-data-text" class="hidden text-xl text-center mt-18">this user doesn't have any public data</h2>
+            <div id="public-data-container" class="hidden w-full mt-10 lg:mt-18 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <div id="public-data-node" class="hidden bg-green-400 rounded-xl flex justify-between items-center ">
                     <h2 id="public-data-title" class="text-lg py-1 px-2 bg-yellow-300 py-2 border-1 rounded-xl flex-1">asede kontol</h2>
                     <button onclick="copyPublicData(this)" class=" px-3 h-full  ">copy</button>
