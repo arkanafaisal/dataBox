@@ -139,11 +139,99 @@
         <button onclick="closeAccountWarning()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <main id="main" class="flex flex-col px-2 lg:px-4 lg:px-15">
+        <div id="home-section" class="px-3 lg:px-12 text-sm lg:text-xl mb-16">
+            <h1 class="text-xl lg:text-4xl font-bold mt-10">Welcome to databox</h1>
+            <p class="mt-6">
+                Have you ever been in a situation where you must get a text / text data from your phone while you're currently in another device? <br>
+                Oh right! you can connect your Whatsapp Web or Discord account even if its just for a single line of text, no problem! <br> <br>
+                Oh noo... your luck is bad today, Whatsapp Web is taking longer than ever to load, your discord got hacked, or this is a public device and it doesn't have the app! <br>
+                Nahh, its just that you're too lazy to connect it because you've stored it to me before, you're smart! I love it!
+            </p>
+            <p class="mt-10">
+                Come on! copy your data now! you can get your data in <b>2 ways!</b> <br>
+                you can <b>login</b> to your account in the top right corner and copy it from this data manager
+            </p>
+            <div id="edit-dummy-data-layer" class="hidden fixed top-0 left-0 w-full min-h-screen bg-black/30 ">
+                <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-100">
+                    <h1 class="text-2xl lg:text-3xl text-center">edit data</h1>
+                    <form id="edit-dummy-data-form" method="POST" class="mt-6 flex flex-col gap-2">
+                        <input id="edit-dummy-data-title" type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-2/3 lg:w-1/2">
+                        <textarea id="edit-dummy-data-body" name="body" placeholder="body" rows="3" cols="1024" required class="border-1 rounded-xl px-2 py-1 text-xs lg:text-base"></textarea>
+                        <div class="flex justify-between mt-4 text-base lg:text-lg">
+                            <button onclick="closeEditDummyDataLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                            <input type="submit" value="save changes" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <ul class="w-full mt-2 border-collapse grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] bg-black border-1 text-sm lg:text-2xl rounded-lg py-1  text-white text-center">
+                <li class="">No</li>
+                <li class="border-l-1 border-r-1 border-white pl-[2px] lg:pl-2 text-left">Title</li>
+                <li class="border-r-1 border-white pl-[2px] lg:pl-2 text-left">Body</li>
+                <li class="">Actions</li>
+            </ul>
+            <div id="dummy-data-container" class="w-full flex flex-col gap-2 text-xs lg:text-lg">
+                <ul id="dummy-data-node" data-id="1" class="w-full grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
+                    <li id="dummy-data-id-1">1</li>
+                    <li id="data-title" class="text-left pl-1 pr-1 lg:px-3 truncate">github PAT token</li>
+                    <li class="w-full overflow-hidden max-h-20">
+                        <textarea readonly rows="2" cols="1024" id="data-body" class="text-left max-w-none pl-1 lg:pl-3">ghp_9XkL2QwE7RzA5MNPcHfU8D4BvJYtSa</textarea>
+                    </li>
+                    <li class="flex mt-2 justify-center">
+                        <button onclick="copyDummyData(this)" class="h-4"><i class="text-gray-600 fa-solid fa-copy"></i></button>
+                        <div id="access-button" class="h-4 flex items-center">
+                            <button class="" onclick="changeDummyAccess(this)"><i class="text-blue-500 fa-solid fa-lock"></i></button>
+                            <button class="hidden" onclick="changeDummyAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
+                        </div>
+                        <button onclick="openEditDummyDataLayer(this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
+                    </li>
+                </ul>
+                <ul id="dummy-data-node" data-id="2" class="w-full grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
+                    <li id="dummy-data-id-2">2</li>
+                    <li id="data-title" class="text-left pl-1 pr-1 lg:px-3 truncate">presentation ppt</li>
+                    <li class="w-full overflow-hidden max-h-20">
+                        <textarea readonly rows="2" cols="1024" id="data-body" class="text-left max-w-none pl-1 lg:pl-3">https://www.canva.com/design/DAFzX9kQpL8/7xQmP2sA9dK3LwT8R5ZVhB4N0JcE1UoMFaQyGgKpHtW2eV6rX8Y/edit?utm_content=DAFzX9kQpL8&utm_campaign=designshare&utm_medium=link&utm_source=sharebutton&continuationToken=ABCD1234EFGH5678IJKL9012MNOP3456QRST7890UVWXYZabcdefghijklmnopqrstuvwxyz</textarea>
+                    </li>
+                    <li class="flex mt-2 justify-center">
+                        <button onclick="copyDummyData(this)" class="h-4"><i class="text-gray-600 fa-solid fa-copy"></i></button>
+                        <div id="access-button" class="h-4 flex items-center">
+                            <button class="hidden" onclick="changeDummyAccess(this)"><i class="text-blue-500 fa-solid fa-lock"></i></button>
+                            <button class="" onclick="changeDummyAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
+                        </div>
+                        <button onclick="openEditDummyDataLayer(this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
+                    </li>
+                </ul>
+                <ul id="dummy-data-node" data-id="3" class="w-full grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
+                    <li id="dummy-data-id-3">3</li>
+                    <li id="data-title" class="text-left pl-1 pr-1 lg:px-3 truncate">our game account pass</li>
+                    <li class="w-full overflow-hidden max-h-20">
+                        <textarea readonly rows="2" cols="1024" id="data-body" class="text-left max-w-none pl-1 lg:pl-3">FunnyDragonLOL!42?</textarea>
+                    </li>
+                    <li class="flex mt-2 justify-center">
+                        <button onclick="copyDummyData(this)" class="h-4"><i class="text-gray-600 fa-solid fa-copy"></i></button>
+                        <div id="access-button" class="h-4 flex items-center">
+                            <button class="hidden" onclick="changeDummyAccess(this)"><i class="text-blue-500 fa-solid fa-lock"></i></button>
+                            <button class="" onclick="changeDummyAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
+                        </div>
+                        <button onclick="openEditDummyDataLayer(this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteDummyData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
+                    </li>
+                </ul>
+            </div>
+
+            <p class="mt-6">Or you can copy your account data using <b>public key</b> if you <b>unlock</b> or set the <b>access to public</b> like this <a class="text-blue-600 hover:text-blue-900 cursor-pointer" href="https://databox.arkanafaisal.my.id/#/arkanafaisal">here</a> ( the public key is handsome123 )</p>
+
+            <p class="mt-18">
+                you just need username and password for the starter, you can add your email and public key later. Hope you enjoy it!
+            </p>
+        </div>
         <div id="dashboard-section" class="hidden flex-1 px-2 flex flex-col py-6">
             <h1 class="lg:text-4xl text-2xl text-center font-bold">Data Manager</h1>
 
             <button onclick="openNewDataLayer()" class="mt-10 bg-green-500 hover:bg-green-600 self-end mr-2 lg:mr-6 pl-1 pr-2 text-base lg:text-2xl rounded-lg"><i class="fa-solid fa-plus"></i> new</button>
-            <div id="add-data-layer" class="hidden absolute top-0 left-0 w-full h-screen bg-black/30 ">
+            <div id="add-data-layer" class="hidden fixed top-0 left-0 w-full h-screen bg-black/30 ">
                 <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-100">
                     <h1 class="text-2xl lg:text-3xl text-center">create new data</h1>
                     <form id="add-data-form" method="POST" class="mt-6 flex flex-col gap-2">
@@ -156,7 +244,7 @@
                     </form>
                 </div>
             </div>
-            <div id="edit-data-layer" class="hidden absolute top-0 left-0 w-full h-screen bg-black/30 ">
+            <div id="edit-data-layer" class="hidden fixed top-0 left-0 w-full h-screen bg-black/30 ">
                 <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-100">
                     <h1 class="text-2xl lg:text-3xl text-center">edit data</h1>
                     <form id="edit-data-form" method="POST" class="mt-6 flex flex-col gap-2">
@@ -164,7 +252,7 @@
                         <textarea id="edit-data-body" name="body" placeholder="body" rows="3" cols="1024" required class="border-1 rounded-xl px-2 py-1 text-xs lg:text-base"></textarea>
                         <div class="flex justify-between mt-4 text-base lg:text-lg">
                             <button onclick="closeEditDataLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
-                            <input type="submit" value="save edit" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                            <input type="submit" value="save changes" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                         </div>
                     </form>
                 </div>
@@ -172,30 +260,30 @@
             
             
             <ul class="w-full border-collapse grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] bg-black border-1 text-sm lg:text-2xl rounded-lg py-1  text-white text-center">
-    <li class="">No</li>
-    <li class="border-l-1 border-r-1 border-white pl-[2px] lg:pl-2 text-left">Title</li>
-    <li class="border-r-1 border-white pl-[2px] lg:pl-2 text-left">Body</li>
-    <li class="">Actions</li>
-</ul>
+                <li class="">No</li>
+                <li class="border-l-1 border-r-1 border-white pl-[2px] lg:pl-2 text-left">Title</li>
+                <li class="border-r-1 border-white pl-[2px] lg:pl-2 text-left">Body</li>
+                <li class="">Actions</li>
+            </ul>
 
-<div id="data-container" class="w-full flex flex-col gap-2 text-xs lg:text-lg">
-    <ul id="data-node" class="w-full hidden grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
-        <li>1</li>
-        <li id="data-title" class="text-left pl-1 pr-1 lg:px-3 truncate">abcdefghijklmnop \n ggdddd</li>
-        <li class="w-full overflow-hidden max-h-20">
-            <textarea readonly rows="2" cols="1024" id="data-body" class="text-left max-w-none pl-1 lg:pl-3"></textarea>
-        </li>
-        <li class="flex mt-2 justify-center">
-            <button onclick="copyData(this)" class="h-4"><i class="text-gray-600 fa-solid fa-copy"></i></button>
-            <div id="access-button">
-                <button class="hidden" onclick="changeAccess(this)"><i class="text-blue-500 fa-solid fa-lock"></i></button>
-                <button class="hidden" onclick="changeAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
+            <div id="data-container" class="w-full flex flex-col gap-2 text-xs lg:text-lg">
+                <ul id="data-node" class="w-full hidden grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
+                    <li>1</li>
+                    <li id="data-title" class="text-left pl-1 pr-1 lg:px-3 truncate">abcdefghijklmnop \n ggdddd</li>
+                    <li class="w-full overflow-hidden max-h-20">
+                        <textarea readonly rows="2" cols="1024" id="data-body" class="text-left max-w-none pl-1 lg:pl-3"></textarea>
+                    </li>
+                    <li class="flex mt-2 justify-center">
+                        <button onclick="copyData(this)" class="h-4"><i class="text-gray-600 fa-solid fa-copy"></i></button>
+                        <div id="access-button" class="h-4 flex items-center">
+                            <button class="hidden" onclick="changeAccess(this)"><i class="text-blue-500 fa-solid fa-lock"></i></button>
+                            <button class="hidden" onclick="changeAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
+                        </div>
+                        <button onclick="openEditDataLayer(this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
+                    </li>
+                </ul>
             </div>
-            <button onclick="openEditDataLayer(this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
-            <button onclick="deleteData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
-        </li>
-    </ul>
-</div>
 
         </div>
 

@@ -203,3 +203,73 @@ function removeAccountEditButton(){
     const el = document.getElementById("profile-edit-button")
     el.remove()
 }
+
+function changeDummyAccess(el){
+    el.closest("#access-button").children[0].classList.toggle("hidden")
+    el.closest("#access-button").children[1].classList.toggle("hidden")
+    addNotification("access changed")
+}
+
+function openEditDummyDataLayer(el){
+    const dataNode = el.closest('#dummy-data-node')
+    const oldData = {
+        id: dataNode.dataset.id,
+        title: dataNode.querySelector('#data-title').innerText,
+        body: dataNode.querySelector('#data-body').value
+    }
+    
+    const editDummyDataLayer = document.getElementById('edit-dummy-data-layer')
+    editDummyDataLayer.querySelector('#edit-dummy-data-form').dataset.currentID = oldData.id
+    editDummyDataLayer.querySelector('#edit-dummy-data-title').value = oldData.title
+    editDummyDataLayer.querySelector('#edit-dummy-data-body').value = oldData.body
+    editDummyDataLayer.classList.remove('hidden')
+
+    lockScroll(true)
+}
+
+function closeEditDummyDataLayer(){
+    document.getElementById("edit-dummy-data-layer").classList.add("hidden")
+    lockScroll(false)
+}
+
+const editDummyDataForm = document.getElementById('edit-dummy-data-form')
+editDummyDataForm.addEventListener('submit', async (e)=>{
+    e.preventDefault()
+
+    const datas = {
+        id: editDummyDataForm.dataset.currentID,
+        title: editDummyDataForm.title.value.trim(),
+        body:editDummyDataForm.body.value
+    }
+
+    if(datas.title.length > 16 || datas.body.length > 1024){
+        addNotification('invalid data length')
+        return
+    }
+
+    try{
+        
+        addNotification("data changed")
+        editDummyDataForm.reset()
+        closeEditDummyDataLayer()
+
+        const dataNode = document.getElementById("dummy-data-id-" + datas.id).parentElement
+        dataNode.querySelector('#data-title').textContent = datas.title
+        dataNode.querySelector('#data-body').value = datas.body
+    }catch(err){
+        addNotification('error occured, please try again')
+        console.log(err)
+    }
+})
+
+function deleteDummyData(el){
+    el.closest("#dummy-data-node").remove()
+}
+
+
+function copyDummyData(el){
+    const text = el.closest('#dummy-data-node').querySelector('#data-body').value
+    console.log(text)
+    navigator.clipboard.writeText(text)
+    addNotification('data copied')
+}
