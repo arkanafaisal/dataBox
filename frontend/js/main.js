@@ -3,6 +3,7 @@
 let hashUsername = ''
 async function mainFunction(hashUsername){
     if(hashUsername) {
+        removeHomeSection()
         removeAccountDetailsButton()
         showPublicDataSection()
         setPublicDataOwner(hashUsername)
@@ -17,7 +18,7 @@ async function mainFunction(hashUsername){
         const res = await fetching('users/me', 'POST', null, true)
         if(!res.success) return addNotification('could not get your data')
 
-        
+        removeHomeSection()
         setAccountDetails(res.data.username, res.data.email, res.data.publicKey)
         addNotification('welcome back '+ res.data.username)
         showLogoutBtn(true)

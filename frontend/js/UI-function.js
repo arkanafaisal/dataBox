@@ -273,3 +273,7 @@ function copyDummyData(el){
     navigator.clipboard.writeText(text)
     addNotification('data copied')
 }
+
+function removeHomeSection(){
+    document.getElementById("home-section").remove()
+}
