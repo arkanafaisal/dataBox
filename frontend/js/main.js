@@ -3,17 +3,21 @@
 let hashUsername = ''
 async function mainFunction(hashUsername){
     if(hashUsername) {
+        removeAccountDetailsButton()
         showPublicDataSection()
         setPublicDataOwner(hashUsername)
         return
     }
     const token = localStorage.getItem("token")
-    if(!token) return showAccountDetailsButton()
+    if(!token) {
+        removeAccountEditButton()
+        return
+    }
     try{
         const res = await fetching('users/me', 'POST', null, true)
         if(!res.success) return addNotification('could not get your data')
 
-        showAccountDetailsButton()
+        
         setAccountDetails(res.data.username, res.data.email, res.data.publicKey)
         addNotification('welcome back '+ res.data.username)
         showLogoutBtn(true)

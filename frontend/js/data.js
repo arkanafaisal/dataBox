@@ -3,7 +3,7 @@ addDataForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const title = addDataForm.title.value.trim();
-    const body = addDataForm.body.value.trim();
+    const body = addDataForm.body.value
 
     if(title.length > 16 || body.length > 1024){
         addNotification('invalid data length')
@@ -42,16 +42,16 @@ editDataForm.addEventListener('submit', async (e)=>{
         const res = await fetching(`data/edit/${datas.id}`, 'PATCH', datas, true)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
-        closeEditDataLayer()
         editDataForm.reset()
+        closeEditDataLayer()
+
+        const dataNode = document.getElementById("data-id-" + res.data.id).parentElement
+        dataNode.querySelector('#data-title').textContent = res.data.title
+        dataNode.querySelector('#data-body').value = res.data.body
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)
     }
-
-    
-
-    console.log(fetchBody)
 })
 
 const editUsernameForm = document.getElementById('edit-username-form')
@@ -70,8 +70,10 @@ editUsernameForm.addEventListener('submit', async (e)=>{
         const res = await fetching(`users/username`, 'PATCH', {newUsername, password}, true)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
-        closeEditUsernameLayer()
         editUsernameForm.reset()
+        closeEditUsernameLayer()
+
+        document.getElementById("profile-username").textContent = res.data
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)
@@ -94,8 +96,8 @@ editEmailForm.addEventListener('submit', async (e)=>{
         const res = await fetching(`users/email`, 'PATCH', {newEmail, password}, true)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
-        closeEditEmailLayer()
         editEmailForm.reset()
+        closeEditEmailLayer()
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)
@@ -117,8 +119,10 @@ editPublicKeyForm.addEventListener('submit', async (e)=>{
         const res = await fetching(`users/public-key`, 'PATCH', {newPublicKey}, true)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
-        closeEditPublicKeyLayer()
         editPublicKeyForm.reset()
+        closeEditPublicKeyLayer()
+    
+        document.getElementById("profile-public-key").textContent = res.data
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)
@@ -148,8 +152,9 @@ function setMyData(dataList){
         newDataNode.classList.remove("hidden")
         newDataNode.dataset.id = dataItem.id
         newDataNode.children[0].innerText = index + 1
+        newDataNode.children[0].id = "data-id-" + dataItem.id
         newDataNode.children[1].innerText = dataItem.title
-        newDataNode.children[2].innerText = dataItem.body
+        newDataNode.querySelector('#data-body').value = dataItem.body
         if(dataItem.access === 'private') newDataNode.querySelector('#access-button').children[0].classList.remove('hidden')
         else newDataNode.querySelector('#access-button').children[1].classList.remove('hidden')
         fragment.appendChild(newDataNode)
@@ -167,7 +172,7 @@ function addData(dataItem){
     newDataNode.dataset.id = dataItem.id
     newDataNode.children[0].innerText = dataContainer.children.length
     newDataNode.children[1].innerText = dataItem.title
-    newDataNode.children[2].innerText = dataItem.body
+    newDataNode.querySelector("#data-body").value = dataItem.body
     if(dataItem.access === 'private') newDataNode.querySelector('#access-button').children[0].classList.remove('hidden')
     else newDataNode.querySelector('#access-button').children[1].classList.remove('hidden')
     dataContainer.appendChild(newDataNode)

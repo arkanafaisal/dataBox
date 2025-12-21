@@ -2,21 +2,25 @@ const signUpForm = document.getElementById("sign-up-form")
 
 signUpForm.addEventListener("submit", async (e) => {
     e.preventDefault()
+    const errMessage = signUpForm.querySelector("#error-message")
 
     const { usernameInput, emailInput, passwordInput, confirmPasswordInput } = signUpForm
     const username = usernameInput.value.trim(), email = emailInput.value.trim() || null, password = passwordInput.value.trim(), confirmPassword = confirmPasswordInput.value.trim()
-    if(!username || !password || !confirmPassword) {return alert("All fields are required")}
-    if(username.length > 32 || (email && email.length > 64) || password.length > 128 || confirmPassword.length > 128){return alert('invalid input length')}
-    if(password !== confirmPassword) {return alert("Passwords don't match")}
-    
+    if(!username || !password || !confirmPassword) {return errMessage.textContent = "All fields are required"}
+    if(username.length > 32 || (email && email.length > 64) || password.length > 128 || confirmPassword.length > 128){return errMessage.textContent = 'invalid input length'}
+    if(password !== confirmPassword) {return errMessage.textContent = "Passwords don't match"}
+
     try{
         const payload = {username, email, password}
         const res = await fetching('auth/register', 'POST', payload)
-        alert(res.message)
-        if(!res.success){return}
+        if(!res.success){
+            errMessage.textContent = res.message
+            return
+        }
+        addNotification(res.message)
         toggleSignBox()
     } catch(err){
-        alert(err.code)
+        errMessage.textContent = err.code
     }
 })
 
@@ -28,18 +32,22 @@ const signInForm = document.getElementById("sign-in-form")
 
 signInForm.addEventListener("submit", async (e) => {
     e.preventDefault()
+    const errMessage = signInForm.querySelector("#error-message")
 
     const usernameOrEmail = signInForm.usernameOrEmailInput.value.trim()
     const password = signInForm.passwordInput.value.trim()
-    if(!usernameOrEmail || !password) {return alert("All fields are required")}
-    if(usernameOrEmail.length > 64 || password.length > 128){return alert('invalid input length')}
+    if(!usernameOrEmail || !password) {return errMessage.textContent = "All fields are required"}
+    if(usernameOrEmail.length > 64 || password.length > 128){return errMessage.textContent = 'invalid input length'}
     try{
         const payload = {usernameOrEmail, password}
         const res = await fetching('auth/login', 'POST', payload)
-        if(!res.success){return}
+        if(!res.success){
+            errMessage.textContent = res.message
+            return
+        }
         localStorage.setItem("token", "Bearer " + res.data.token)
         window.location.reload()
     } catch(err){
-        alert(err.code)
+        errMessage.textContent = err.code
     }
 })

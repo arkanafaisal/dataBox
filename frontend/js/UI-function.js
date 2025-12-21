@@ -1,9 +1,14 @@
-function lockScroll(isTrue){
-    if(isTrue){
-        document.body.classList.add('overflow-hidden')
-        return
-    }
-    document.body.classList.remove('overflow-hidden')
+function lockScroll(lock){
+  const scrollbarWidth =
+    window.innerWidth - document.documentElement.clientWidth;
+
+  if(lock){
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = scrollbarWidth + 'px';
+  } else {
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
 }
 
 function toggleSignBox(){
@@ -16,6 +21,7 @@ function toggleSignBox(){
 function loginBtnHandler(){
     const signLayer = document.getElementById('sign-layer');
     signLayer.classList.remove('hidden');
+    lockScroll(true)
 }
 
 function LogoutBtnHandler(){
@@ -48,11 +54,13 @@ function toggleAccountDetails(){
 function openNewDataLayer(){
     const newDataLayer = document.getElementById('add-data-layer');
     newDataLayer.classList.remove('hidden');
+    lockScroll(true)
 }
 
 function closeNewDataLayer(){
     const newDataLayer = document.getElementById('add-data-layer');
-    newDataLayer.classList.add('hidden');
+    newDataLayer.classList.add('hidden')
+    lockScroll(false);
 }
 
 function openEditDataLayer(el){
@@ -60,7 +68,7 @@ function openEditDataLayer(el){
     const oldData = {
         id: dataNode.dataset.id,
         title: dataNode.querySelector('#data-title').innerText,
-        body: dataNode.querySelector('#data-body').innerText
+        body: dataNode.querySelector('#data-body').value
     }
     
     const editDataLayer = document.getElementById('edit-data-layer')
@@ -68,11 +76,14 @@ function openEditDataLayer(el){
     editDataLayer.querySelector('#edit-data-title').value = oldData.title
     editDataLayer.querySelector('#edit-data-body').value = oldData.body
     editDataLayer.classList.remove('hidden')
+
+    lockScroll(true)
 }
 
 function closeEditDataLayer(){
     const editDataLayer = document.getElementById('edit-data-layer');
     editDataLayer.classList.add('hidden');
+    lockScroll(false)
 }
 
 function changeAccessIcon(newData, el){
@@ -89,7 +100,8 @@ function changeAccessIcon(newData, el){
 }
 
 function copyData(el){
-    const text = el.closest('#data-node').querySelector('#data-body').innerText
+    const text = el.closest('#data-node').querySelector('#data-body').value
+    console.log(text)
     navigator.clipboard.writeText(text)
     addNotification('data copied')
 }
@@ -118,9 +130,9 @@ function showDashboardSection(){
     dashboardSection.classList.remove('hidden')
 }
 
-function showAccountDetailsButton(){
+function removeAccountDetailsButton(){
     const accountDetailsButton = document.getElementById('account-details-button')
-    accountDetailsButton.classList.remove('hidden')
+    accountDetailsButton.remove()
 }
 
 function showPublicDataSection(){
@@ -154,29 +166,40 @@ function setShareProfileBtn(username){
 function openEditUsernameLayer(){
     const editUsernameLayer = document.getElementById('edit-username-layer')
     editUsernameLayer.classList.remove('hidden')
+    lockScroll(true)
 }
 
 function closeEditUsernameLayer(){
     const editUsernameLayer = document.getElementById('edit-username-layer')
     editUsernameLayer.classList.add('hidden')
+    lockScroll(false)
 }
 
 function openEditPublicKeyLayer(){
     const editPublicKeyLayer = document.getElementById('edit-public-key-layer')
     editPublicKeyLayer.classList.remove('hidden')
+    lockScroll(true)
 }
 
 function closeEditPublicKeyLayer(){
     const editPublicKeyLayer = document.getElementById('edit-public-key-layer')
     editPublicKeyLayer.classList.add('hidden')
+    lockScroll(false)
 }
 
 function openEditEmailLayer(){
     const editEmailLayer = document.getElementById('edit-email-layer')
     editEmailLayer.classList.remove('hidden')
+    lockScroll(true)
 }
 
 function closeEditEmailLayer(){
     const editEmailLayer = document.getElementById('edit-email-layer')
     editEmailLayer.classList.add('hidden')
+    lockScroll(false)
+}
+
+function removeAccountEditButton(){
+    const el = document.getElementById("profile-edit-button")
+    el.remove()
 }

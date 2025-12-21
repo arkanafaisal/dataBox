@@ -30,7 +30,7 @@ userController.editUsername = async (req, res) => {
         if(result1.username === newUsername) return response(res, false, "there's nothing to change")
         if(result1.password !== password) return response(res, false, 'wrong password')
         const [result2] = await db.query('UPDATE users SET username = ? WHERE id = ?', [newUsername, id])
-        return response(res, true, 'username changed', {newUsername})
+        return response(res, true, 'username changed', newUsername)
     } catch(err){
         if(err.code === 'ER_DUP_ENTRY') return response(res, false, 'username taken')
         return response(res, false, 'could not change username')
@@ -101,7 +101,7 @@ userController.editEmail = async (req, res) => {
             html: `<p>Click to verify:</p><a href="${link}">Verify Email</a>`
         })
 
-        return response(res, true, "verification email has been sent")
+        return response(res, true, "verification email has been sent to " + newEmail)
     } catch(err){
         console.log(err)
         return response(res, false, "could not add email")
