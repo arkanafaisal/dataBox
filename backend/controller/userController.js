@@ -2,7 +2,7 @@ import response from "../response.js";
 import db from "../db.js";
 import nodemailer from "nodemailer"
 import crypto from "crypto"
-
+import bcrypt from "bcrypt"
 
 const userController = {}
 
@@ -28,7 +28,8 @@ userController.editUsername = async (req, res) => {
     try{
         const [[result1]] =  await db.query('SELECT username, password FROM users WHERE id = ?', [id])
         if(result1.username === newUsername) return response(res, false, "there's nothing to change")
-        if(result1.password !== password) return response(res, false, 'wrong password')
+        const ok = await bcrypt.compare(password, result1.password)
+        if(!ok) return response(res, false, 'wrong password')
         const [result2] = await db.query('UPDATE users SET username = ? WHERE id = ?', [newUsername, id])
         return response(res, true, 'username changed', newUsername)
     } catch(err){
@@ -65,15 +66,14 @@ userController.editEmail = async (req, res) => {
     if(newEmail.length > 64 || password.length > 255) return response(res, false, 'invalid input length')
     if(typeof newEmail !== 'string' || typeof password !== 'string') return response(res, false, 'invalid input type')
 
-    
-
     try{
         const [existUser] = await db.query("SELECT id FROM users WHERE email = ?", [newEmail])
         if(existUser.length !== 0) return response(res, false, "email already taken")
-        console.log(existUser)
         
-        const [result] = await db.query("SELECT email FROM users WHERE (id = ? AND password = ?)", [id, password])
-        if(result.length === 0) return response(res, false, "wrong password")
+        const [result] = await db.query("SELECT email, password FROM users WHERE (id = ?)", [id])
+        if(result.length === 0) return response(res, false, "user not exist")
+        const ok = await bcrypt.compare(password, result[0].password)
+        if(!ok) return response(res, false, "incorrect password")
         if(result[0].email === newEmail) return response(res, false, "there's nothing to change")
         
 

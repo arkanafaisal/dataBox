@@ -275,5 +275,5 @@ function copyDummyData(el){
 }
 
 function removeHomeSection(){
-    document.getElementById("home-section").remove
+    document.getElementById("home-section").remove()
 }

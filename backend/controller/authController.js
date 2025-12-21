@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import db from '../db.js';
 import response from '../response.js';
-
+import bcrypt from "bcrypt"
 
 const authController = {}
 
@@ -15,7 +15,9 @@ authController.register = async (req, res)=>{
     try{
         const [existingUser] = await db.query('SELECT id FROM users WHERE (username = ? OR email = ?)', [username, email])
         if(existingUser.length > 0){return response(res, false, 'username already taken')}
-        const [result] = await db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, password]);
+
+        const hash = await bcrypt.hash(password, 10)
+        const [result] = await db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, hash]);
         return response(res, true, 'user created')
     } catch(error) {
         console.log(error.code)
@@ -30,8 +32,10 @@ authController.login = async (req, res)=>{
     if(typeof usernameOrEmail !== 'string' || typeof password !== 'string'){return response(res, false, 'invalid username/email or password')}
     if(usernameOrEmail.length > 64 || password.length > 255){return response(res, false, 'invalid input length')}
     try{
-        const [result] = await db.query('SELECT id, username FROM users WHERE (username = ? OR email = ?) AND password = ?', [usernameOrEmail, usernameOrEmail, password]);
-        if(result.length === 0){return response(res, false, 'wrong username, email or password')}
+        const [result] = await db.query('SELECT id, username, password FROM users WHERE (username = ? OR email = ?)', [usernameOrEmail, usernameOrEmail])
+        const ok = await bcrypt.compare(password, result[0].password)
+        if(result.length === 0 || !ok){return response(res, false, 'wrong username, email or password')}
+        
         const token = jwt.sign({id: result[0].id, username: result[0].username}, process.env.JWT_SECRET, {expiresIn: '7d'})
         return response(res, true, 'signed in', {token})
     } catch(err) {
