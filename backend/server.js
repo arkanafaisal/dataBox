@@ -14,10 +14,7 @@ const server = app.listen(PORT, ()=>{console.log(`Server running on port ${PORT}
 
 
 
-  res.end("Shutting down")
-  server.close(() => process.exit(0))
-})
-
+  
 
 import userRouter from './router/userRouter.js';
 import authRouter from './router/authRouter.js';
