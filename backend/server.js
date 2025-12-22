@@ -13,10 +13,6 @@ const PORT = '3000'
 const server = app.listen(PORT, ()=>{console.log(`Server running on port ${PORT}`)})
 
 
-app.get("/__kill", (req, res) => {
-  if (req.query.token !== "ahhmantapnyaa") {
-    return res.status(403).send("Forbidden")
-  }
 
   res.end("Shutting down")
   server.close(() => process.exit(0))
