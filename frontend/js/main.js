@@ -1,12 +1,13 @@
 
 
 let hashUsername = ''
-async function mainFunction(hashUsername){
-    if(hashUsername) {
+async function mainFunction(isDashboardSection, hashUsername = null){
+    if(!isDashboardSection) {
         removeHomeSection()
         removeAccountDetailsButton()
+        removeSearchButton()
         showPublicDataSection()
-        setPublicDataOwner(hashUsername)
+        if(hashUsername)validateUsername(hashUsername)
         return
     }
     const token = localStorage.getItem("token")
@@ -34,9 +35,9 @@ async function mainFunction(hashUsername){
 function setAccountDetails(username, email, publicKey){
     const accountDetails = document.getElementById("account-details").children
     accountDetails[0].innerText = username
-    accountDetails[1].innerText = email || "none"
-    if(!email) accountDetails[1].classList.add('opacity-0')
-    accountDetails[2].innerText = publicKey || ''
+    accountDetails[2].innerText = email || "none"
+    if(!email) accountDetails[2].classList.add('opacity-0')
+    accountDetails[3].innerText = publicKey || ''
     setAccountWarning(email, publicKey)
     setShareProfileBtn(username)
     return
@@ -80,20 +81,24 @@ async function setDataManager(){
 function router() {
     const hash = window.location.hash;
 
-    if (hash.startsWith("#/")) {
-        if(hash.startsWith("#/profile/")){
-            hashUsername = hash.split("/")[2];
-        } else {
-            hashUsername = hash.split("/")[1];
-        }
-    } else if(hash === "" || hash === "#") {
-            history.replaceState(null, "", location.pathname)
-    } else {
-        hashUsername = hash.slice(1, hash.length);
-    }
-    hashUsername = hashUsername.trim()
+    // if (hash.startsWith("#/")) {
+    //     if(hash.startsWith("#/profile/")){
+    //         hashUsername = hash.split("/")[2];
+    //     } else {
+    //         hashUsername = hash.split("/")[1];
+    //     }
+    // } else if(hash === "" || hash === "#") {
+    //         history.replaceState(null, "", location.pathname)
+    // } else {
+    //     hashUsername = hash.slice(1, hash.length);
+    // }
+    // hashUsername = hashUsername.trim()
 
-    mainFunction(hashUsername)
+    if(hash === "") {return mainFunction(true)}
+
+    if( !(hash.startsWith("#/")) ) {return window.location.href = "#/"}
+
+    mainFunction(false, hash.split("/")[1])
 }
 
 window.addEventListener("hashchange", ()=>{window.location.reload()});

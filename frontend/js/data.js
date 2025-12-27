@@ -1,31 +1,37 @@
 const addDataForm = document.getElementById('add-data-form');
 addDataForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    addDataForm.submitBtn.disabled = true
 
     const title = addDataForm.title.value.trim();
     const body = addDataForm.body.value
 
-    if(title.length > 16 || body.length > 1024){
-        addNotification('invalid data length')
-        return
-    }
-
+    
     try{
+        if (!title || !body) return addNotification('all fields are required')
+        if(title.length > 16 || body.length > 1024){
+            addNotification('invalid data length')
+            return
+        }
+
         const res = await fetching('data/add', 'POST', { title, body }, true);
         if(!res.success){return alert(res.message)}
         addData(res.data)
-        closeNewDataLayer();
+        toggleNewDataLayer(false);
         addDataForm.reset();
         addNotification('data added successfully')
     } catch(err){
         addNotification('error occured, please try again')
         console.log(err);
+    } finally {
+        addDataForm.submitBtn.disabled = false
     }
 })
 
 const editDataForm = document.getElementById('edit-data-form')
 editDataForm.addEventListener('submit', async (e)=>{
     e.preventDefault()
+    editDataForm.submitBtn.disabled = true
 
     const datas = {
         id: editDataForm.dataset.currentID,
@@ -33,17 +39,16 @@ editDataForm.addEventListener('submit', async (e)=>{
         body:editDataForm.body.value
     }
 
-    if(datas.title.length > 16 || datas.body.length > 1024){
-        addNotification('invalid data length')
-        return
-    }
-
+    
     try{
+        if(!datas.title || !datas.body) return addNotification("all fields are required")
+        if(datas.title.length > 16 || datas.body.length > 1024) return addNotification('invalid data length')
+
         const res = await fetching(`data/edit/${datas.id}`, 'PATCH', datas, true)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editDataForm.reset()
-        closeEditDataLayer()
+        toggleEditDataLayer(false)
 
         const dataNode = document.getElementById("data-id-" + res.data.id).parentElement
         dataNode.querySelector('#data-title').textContent = res.data.title
@@ -51,86 +56,109 @@ editDataForm.addEventListener('submit', async (e)=>{
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)
+    } finally {
+        editDataForm.submitBtn.disabled = false
     }
 })
 
 const editUsernameForm = document.getElementById('edit-username-form')
 editUsernameForm.addEventListener('submit', async (e)=>{
     e.preventDefault()
+    editUsernameForm.submitBtn.disabled = true
 
     const newUsername = editUsernameForm.newUsername.value
     const password = editUsernameForm.password.value
 
-    if(newUsername.length > 32 || password.length > 255){
-        addNotification('invalid data length')
-        return
-    }
-
+    
     try{
+        if(!newUsername || !password) return addNotification('all fields are required')
+        if(newUsername.length > 32 || password.length > 255) return addNotification('invalid data length')
+
         const res = await fetching(`users/username`, 'PATCH', {newUsername, password}, true)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editUsernameForm.reset()
-        closeEditUsernameLayer()
+        toggleEditUsernameLayer(false)
 
         document.getElementById("profile-username").textContent = res.data
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)
+    } finally {
+        editUsernameForm.submitBtn.disabled = false
     }
 })
 
 const editEmailForm = document.getElementById('edit-email-form')
 editEmailForm.addEventListener('submit', async (e)=>{
     e.preventDefault()
+    editEmailForm.submitBtn.disabled = true
 
     const newEmail = editEmailForm.newEmail.value
     const password = editEmailForm.password.value
 
-    if(newEmail.length > 32 || password.length > 255){
-        addNotification('invalid data length')
-        return
-    }
-
+    
     try{
+        if(!newEmail || !password) return addNotification('all fields are required')
+        if(newEmail.length > 32 || password.length > 255) return addNotification('invalid data length')
+
         const res = await fetching(`users/email`, 'PATCH', {newEmail, password}, true)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editEmailForm.reset()
-        closeEditEmailLayer()
+        toggleEditEmailLayer(false)
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)
+    } finally {
+        editEmailForm.submitBtn.disabled = false
+    }
+})
+
+const editPasswordForm = document.getElementById('edit-password-form')
+editPasswordForm.addEventListener('submit', async (e)=>{
+    e.preventDefault()
+    editPasswordForm.submitBtn.disabled = true
+
+    try{
+        const res = await fetching(`users/reset-password`, 'POST', null, true)
+        if(!res.success) return addNotification(res.message)
+        addNotification(res.message)
+        editPasswordForm.reset()
+        toggleEditPasswordLayer(false)
+    }catch(err){
+        addNotification('error occured, please try again')
+        console.log(err)
+    } finally {
+        editPasswordForm.submitBtn.disabled = false
     }
 })
 
 const editPublicKeyForm = document.getElementById('edit-public-key-form')
 editPublicKeyForm.addEventListener('submit', async (e)=>{
     e.preventDefault()
+    editPublicKeyForm.submitBtn.disabled = true
 
     const newPublicKey = editPublicKeyForm.newPublicKey.value
 
-    if(newPublicKey.length > 255){
-        addNotification('invalid data length')
-        return
-    }
-
+    
     try{
+        if(!newPublicKey) return addNotification('all fields are required')
+        if(newPublicKey.length > 255) return addNotification('invalid data length')
+        
         const res = await fetching(`users/public-key`, 'PATCH', {newPublicKey}, true)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editPublicKeyForm.reset()
-        closeEditPublicKeyLayer()
+        toggleEditPublicKeyLayer(false)
     
         document.getElementById("profile-public-key").textContent = res.data
     }catch(err){
         addNotification('error occured, please try again')
         console.log(err)
+    } finally {
+        editPublicKeyForm.submitBtn.disabled = false
     }
-
-    
-
-    console.log(fetchBody)
 })
 
 function setMyData(dataList){
@@ -183,7 +211,7 @@ async function changeAccess(el){
 
     try{
         const res = await fetching(`data/update/access/${dataId}`, 'POST', null, true);
-        if(!res.success){return alert(res.message)}
+        if(!res.success){return addNotification(res.message)}
         changeAccessIcon(res.data, el.closest('#access-button'));
         addNotification('access changed to ' + res.data)
     } catch(err){

@@ -9,7 +9,7 @@ dataController.addData = async (req, res) => {
     if(!title || !body){return response(res, 400, false, null, 'please fill all fields')}
     if(title.length > 16 || body.length > 1024){return response(res, 400, false, null, 'invalid input length')}
     if(typeof title !== 'string' || typeof body !== 'string'){return response(res, 400, false, null, 'invalid input type')}
-    console.log(body)
+    
     try{
         const [result] = await db.query('INSERT INTO userData (user_id, title, body) VALUES (?, ?, ?)', [req.user.id, title, body])
         return response(res, true, 'data added successfully', {id: result.insertId, title, body, access:'private'})

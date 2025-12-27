@@ -4,9 +4,8 @@ publicDataForm.addEventListener('submit', async (e)=>{
 
     const publicKey = publicDataForm.publicKeyInput.value.trim()
     if(publicKey.length > 255 || !publicKey) return
-    
     try{
-        const res = await fetching(`data/profile/${hashUsername}`, 'POST', {publicKey}, false)
+        const res = await fetching(`data/profile/${publicDataForm.dataset.username}`, 'POST', {publicKey}, false)
         if(!res.success) return addNotification(res.message)
     
         addNotification(res.message)
@@ -51,4 +50,47 @@ function copyPublicData(el){
         addNotification(err)
     }
 
+}
+
+const searchUsernameForm = document.getElementById('search-username-form')
+searchUsernameForm.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    searchUsernameForm.submitBtn.disabled = true
+
+    const username = searchUsernameForm.username.value.trim()
+
+    try {
+        if(!username) return addNotification("missing username")
+        if(username.length > 32) {return addNotification("invalid username length")}
+        
+        const res  = await fetching("users/search/" + username, "GET")
+        addNotification(res.message)
+        if(!res.success) return
+
+        setPublicDataOwner(res.data)
+    } catch(err) {
+        return addNotification(err)
+    } finally {
+        searchUsernameForm.submitBtn.disabled = false
+    }
+})
+
+function setPublicDataOwner(username){
+    document.getElementById('search-username-form').remove()
+    
+    document.getElementById('public-data-owner').classList.remove("hidden")
+    document.getElementById('public-data-owner').innerText = username + "'s public data"
+    document.getElementById('public-data-form').classList.remove("hidden")
+    document.getElementById('public-data-form').dataset.username = username
+}
+
+async function validateUsername(username){
+    try {
+        const res = await fetching("users/search/" + username, "GET")
+        addNotification(res.message)
+
+        if(res.success) return setPublicDataOwner(res.data)
+    } catch(err) {
+        addNotification(err)
+    }
 }

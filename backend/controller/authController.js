@@ -28,18 +28,18 @@ authController.register = async (req, res)=>{
 authController.login = async (req, res)=>{
     const {usernameOrEmail, password} = req.body;
     if(!usernameOrEmail || !password){return response(res, false, 'missing fields')}
-    console.log(usernameOrEmail)
     if(typeof usernameOrEmail !== 'string' || typeof password !== 'string'){return response(res, false, 'invalid username/email or password')}
     if(usernameOrEmail.length > 64 || password.length > 255){return response(res, false, 'invalid input length')}
     try{
         const [result] = await db.query('SELECT id, username, password FROM users WHERE (username = ? OR email = ?)', [usernameOrEmail, usernameOrEmail])
+        if(result.length === 0){return response(res, false, 'wrong username, email or password')}
         const ok = await bcrypt.compare(password, result[0].password)
-        if(result.length === 0 || !ok){return response(res, false, 'wrong username, email or password')}
+        if(!ok){return response(res, false, 'wrong username, email or password')}
         
         const token = jwt.sign({id: result[0].id, username: result[0].username}, process.env.JWT_SECRET, {expiresIn: '7d'})
-        return response(res, true, 'signed in', {token})
+        return response(res, true, 'login success', {token})
     } catch(err) {
-        return response(res, false, 'could not sign in', null, err.code)
+        return response(res, false, 'could not login', null, err.code)
     }
 }
 

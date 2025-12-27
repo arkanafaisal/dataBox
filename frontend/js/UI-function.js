@@ -51,41 +51,6 @@ function toggleAccountDetails(){
     accountCard.classList.toggle('hidden');
 }
 
-function openNewDataLayer(){
-    const newDataLayer = document.getElementById('add-data-layer');
-    newDataLayer.classList.remove('hidden');
-    lockScroll(true)
-}
-
-function closeNewDataLayer(){
-    const newDataLayer = document.getElementById('add-data-layer');
-    newDataLayer.classList.add('hidden')
-    lockScroll(false);
-}
-
-function openEditDataLayer(el){
-    const dataNode = el.closest('#data-node')
-    const oldData = {
-        id: dataNode.dataset.id,
-        title: dataNode.querySelector('#data-title').innerText,
-        body: dataNode.querySelector('#data-body').value
-    }
-    
-    const editDataLayer = document.getElementById('edit-data-layer')
-    editDataLayer.querySelector('#edit-data-form').dataset.currentID = oldData.id
-    editDataLayer.querySelector('#edit-data-title').value = oldData.title
-    editDataLayer.querySelector('#edit-data-body').value = oldData.body
-    editDataLayer.classList.remove('hidden')
-
-    lockScroll(true)
-}
-
-function closeEditDataLayer(){
-    const editDataLayer = document.getElementById('edit-data-layer');
-    editDataLayer.classList.add('hidden');
-    lockScroll(false)
-}
-
 function changeAccessIcon(newData, el){
     const lockIcon = el.children[0];
     const unlockIcon = el.children[1];
@@ -135,6 +100,11 @@ function removeAccountDetailsButton(){
     accountDetailsButton.remove()
 }
 
+function removeSearchButton(){
+    const searchButton = document.getElementById('search-button')
+    searchButton.remove()
+}
+
 function showPublicDataSection(){
     const publicDataSection = document.getElementById('public-data-section')
     publicDataSection.classList.remove('hidden')
@@ -143,10 +113,6 @@ function showPublicDataSection(){
 function closeAccountWarning(){
     const accountWarning = document.getElementById('account-warning')
     accountWarning.remove()
-}
-
-function setPublicDataOwner(username){
-    document.getElementById('public-data-owner').innerText = username + "'s public data"
 }
 
 function setShareProfileBtn(username){
@@ -163,46 +129,107 @@ function setShareProfileBtn(username){
     }
 }
 
-function openEditUsernameLayer(){
-    const editUsernameLayer = document.getElementById('edit-username-layer')
-    editUsernameLayer.classList.remove('hidden')
-    lockScroll(true)
-}
-
-function closeEditUsernameLayer(){
-    const editUsernameLayer = document.getElementById('edit-username-layer')
-    editUsernameLayer.classList.add('hidden')
-    lockScroll(false)
-}
-
-function openEditPublicKeyLayer(){
-    const editPublicKeyLayer = document.getElementById('edit-public-key-layer')
-    editPublicKeyLayer.classList.remove('hidden')
-    lockScroll(true)
-}
-
-function closeEditPublicKeyLayer(){
-    const editPublicKeyLayer = document.getElementById('edit-public-key-layer')
-    editPublicKeyLayer.classList.add('hidden')
-    lockScroll(false)
-}
-
-function openEditEmailLayer(){
-    const editEmailLayer = document.getElementById('edit-email-layer')
-    editEmailLayer.classList.remove('hidden')
-    lockScroll(true)
-}
-
-function closeEditEmailLayer(){
-    const editEmailLayer = document.getElementById('edit-email-layer')
-    editEmailLayer.classList.add('hidden')
-    lockScroll(false)
-}
-
 function removeAccountEditButton(){
     const el = document.getElementById("profile-edit-button")
     el.remove()
 }
+
+function removeHomeSection(){
+    document.getElementById("home-section").remove()
+}
+
+function searchSection(){
+    window.location.href = "#/"
+}
+
+
+
+function toggleNewDataLayer(isOpen){
+    const newDataLayer = document.getElementById('add-data-layer');
+    if(isOpen){
+        newDataLayer.classList.remove('hidden');
+        lockScroll(true)
+    } else {
+        newDataLayer.classList.add('hidden')
+        lockScroll(false);
+    }
+}
+
+function toggleEditDataLayer(isOpen, el = null){
+    const editDataLayer = document.getElementById('edit-data-layer');
+    if(!isOpen){
+        editDataLayer.classList.add('hidden');
+        lockScroll(false)
+        return
+    }
+
+    const dataNode = el.closest('#data-node')
+    const oldData = {
+        id: dataNode.dataset.id,
+        title: dataNode.querySelector('#data-title').innerText,
+        body: dataNode.querySelector('#data-body').value
+    }
+    
+    editDataLayer.querySelector('#edit-data-form').dataset.currentID = oldData.id
+    editDataLayer.querySelector('#edit-data-title').value = oldData.title
+    editDataLayer.querySelector('#edit-data-body').value = oldData.body
+    editDataLayer.classList.remove('hidden')
+
+    lockScroll(true)
+}
+
+function toggleEditUsernameLayer(isOpen){
+    const editUsernameLayer = document.getElementById('edit-username-layer')
+    if(isOpen){
+        editUsernameLayer.classList.remove('hidden')
+        lockScroll(true)
+    } else {
+        editUsernameLayer.classList.add('hidden')
+        lockScroll(false);
+    }
+}
+
+function toggleEditPublicKeyLayer(isOpen){
+    const editPublicKeyLayer = document.getElementById('edit-public-key-layer')
+    if(isOpen){
+        editPublicKeyLayer.classList.remove('hidden')
+        lockScroll(true)
+    } else {
+        editPublicKeyLayer.classList.add('hidden')
+        lockScroll(false)
+    }
+}
+
+function toggleEditEmailLayer(isOpen){
+    const editEmailLayer = document.getElementById('edit-email-layer')
+    if(isOpen){
+        editEmailLayer.classList.remove('hidden')
+        lockScroll(true)
+    } else {
+        editEmailLayer.classList.add('hidden')
+        lockScroll(false)
+    }
+}
+
+function toggleEditPasswordLayer(isOpen){
+    const editPasswordLayer = document.getElementById('edit-password-layer')
+    if(isOpen){
+        editPasswordLayer.classList.remove('hidden')
+        lockScroll(true)
+    } else {
+        editPasswordLayer.classList.add('hidden')
+        lockScroll(false)
+    }
+}
+
+
+
+
+
+
+
+
+
 
 function changeDummyAccess(el){
     el.closest("#access-button").children[0].classList.toggle("hidden")
@@ -272,8 +299,4 @@ function copyDummyData(el){
     console.log(text)
     navigator.clipboard.writeText(text)
     addNotification('data copied')
-}
-
-function removeHomeSection(){
-    document.getElementById("home-section").remove()
 }

@@ -2,6 +2,7 @@ import express from 'express';
 
 import userController from '../controller/userController.js';
 import jwtVerify from '../middleware/jwtVerify.js';
+import rateLimiting from '../middleware/rateLimiting.js';
 
 const userRouter = express.Router();
 userRouter.use('/', (req, res, next)=>{
@@ -9,11 +10,18 @@ userRouter.use('/', (req, res, next)=>{
     next()
 });
 
-userRouter.post('/me', jwtVerify, userController.getMe);
-userRouter.patch('/username', jwtVerify, userController.editUsername);
-userRouter.patch('/public-key', jwtVerify, userController.editPublicKey);
-userRouter.patch('/email', jwtVerify, userController.editEmail);
-userRouter.get('/verify-email', userController.verifyEmail);
+userRouter.post('/me',                      rateLimiting("getData", 1, 30),             jwtVerify,  userController.getMe);
+userRouter.get('/search/:username',         rateLimiting("searchUsername", 1, 15),                  userController.getByUsername)
+
+
+userRouter.patch('/username',               rateLimiting("editUsername", 1, 3),         jwtVerify,  userController.editUsername)
+userRouter.patch('/public-key',             rateLimiting("editPublicKey", 1, 5),        jwtVerify,  userController.editPublicKey)
+
+userRouter.patch('/email',                  rateLimiting("EditEmail", 15, 3),           jwtVerify,  userController.editEmail)
+userRouter.get('/verify-email',             rateLimiting("verifyEmail", 15, 5),                     userController.verifyEmail)
+
+userRouter.post("/reset-password",          rateLimiting("resetPassword", 15, 3),       jwtVerify,  userController.resetPassword)
+userRouter.post("/verify-reset-password",   rateLimiting("verifyResetPassword", 15, 5),             userController.verifyResetPassword)
 
 
 

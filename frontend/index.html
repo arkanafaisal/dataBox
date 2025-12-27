@@ -21,7 +21,7 @@
                 <input name="confirmPasswordInput" type="password" maxlength="128" required placeholder="confirm password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
 
                 <h4 id="error-message" class="text-xs h-5 text-red-500"></h4>
-                <input type="submit" value="Create Account" class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-base lg:text-lg py-1 px-3 mt-2 lg:mt-4 rounded-xl text-white">
+                <input name="submitBtn" type="submit" value="Create Account" class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-base lg:text-lg py-1 px-3 mt-2 lg:mt-4 rounded-xl text-white">
 
                 <div class="flex gap-2 items-center text-xs lg:text-sm pl-2">
                     <p>have account already?</p>
@@ -36,7 +36,7 @@
                 <input name="passwordInput" type="password" maxlength="128" required placeholder="password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
                 
                 <h4 id="error-message" class="text-xs h-5 text-red-500"></h4>
-                <input type="submit" value="Enter Account" class="bg-green-600 hover:bg-green-700 cursor-pointer text-base lg:text-lg py-1 px-3 mt-2 lg:mt-4 rounded-xl text-white">
+                <input name="submitBtn" type="submit" value="Enter Account" class="bg-green-600 hover:bg-green-700 cursor-pointer text-base lg:text-lg py-1 px-3 mt-2 lg:mt-4 rounded-xl text-white">
 
                 <div class="flex gap-2 items-center text-xs lg:text-sm pl-2">
                     <p>don't have account?</p>
@@ -54,8 +54,8 @@
                     <input type="text" name="newUsername" placeholder="new username" maxlength="32" required class="border-1 rounded-lg px-2 py-1 w-full">
                     <input type="password" name="password" placeholder="password" maxlength="255" required class="border-1 rounded-lg px-2 py-1 w-full">
                     <div class="flex justify-between mt-4 text-base lg:text-lg">
-                        <button onclick="closeEditUsernameLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
-                        <input type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                        <button onclick="toggleEditUsernameLayer(false)" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                        <input name="submitBtn" type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                     </div>
                 </form>
             </div>
@@ -68,8 +68,21 @@
                     <input type="text" name="newEmail" placeholder="new email" maxlength="64" required class="border-1 rounded-lg px-2 py-1 w-full">
                     <input type="password" name="password" placeholder="password" maxlength="255" required class="border-1 rounded-lg px-2 py-1 w-full">
                     <div class="flex justify-between mt-4 text-base lg:text-lg">
-                        <button onclick="closeEditEmailLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
-                        <input type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                        <button onclick="toggleEditEmailLayer(false)" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                        <input name="submitBtn" type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="edit-password-layer" class="hidden fixed h-screen w-full bg-black/40 top-0 left-0 z-200">
+            <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-100">
+                <h1 class="text-2xl lg:text-3xl text-center">reset password</h1>
+                <p class="text-sm mt-2">We will send a password reset link to your registered email. The link is valid for 15 minutes, please check your email and click the link to reset your password.</p>
+                <form id="edit-password-form" method="POST" class="mt-4 flex flex-col gap-2 text-base">
+                    <div class="flex justify-between mt-4 text-base lg:text-lg">
+                        <button onclick="toggleEditPasswordLayer(false)" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                        <input name="submitBtn" type="submit" value="send" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                     </div>
                 </form>
             </div>
@@ -81,8 +94,8 @@
                 <form id="edit-public-key-form" method="POST" class="mt-6 flex flex-col gap-2 text-base">
                     <input type="text" name="newPublicKey" placeholder="new public key" maxlength="32" required class="border-1 rounded-lg px-2 py-1 w-full">
                     <div class="flex justify-between mt-4 text-base lg:text-lg">
-                        <button onclick="closeEditPublicKeyLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
-                        <input type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                        <button onclick="toggleEditPublicKeyLayer(false)" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                        <input name="submitBtn" type="submit" value="confirm" class="bg-blue-500 hover:bg-blue-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                     </div>
                 </form>
             </div>
@@ -90,11 +103,15 @@
     </ul>
     
     <header id="header" class="h-12 lg:px-16 px-6 bg-yellow-300 flex items-center">
-        <a href="" id="" class="flex gap-2 flex-1 items-center cursor-pointer">
+        <a href="" id="" class="flex gap-2 items-center cursor-pointer">
             <i class="fa-solid fa-box-open text-3xl"></i>
             <h1 class="font-bold text-xl lg:text-3xl">databox</h1>
         </a>
-        
+
+        <div class="relative ml-6 lg:ml-12 flex-1">
+            <button id="search-button" onclick="searchSection()" class="flex gap-1 items-center"><i class="fa-solid fa-magnifying-glass text-2xl mt-1"></i><h2 class="text-2xl hidden lg:block">search</h2></button>
+        </div>
+
         <div class="relative mr-4 lg:mr-16">
             <button id="account-details-button" onclick="toggleAccountDetails()" class="flex items-center"><i class="fa-solid fa-user text-3xl mt-1"></i><h2 class="text-2xl hidden lg:block">account</h2></button>
             <div id="account-card" class="hidden absolute top-10 -left-2 lg:-left-15 -translate-x-[50%] lg:-translate-x-0 bg-gray-200 w-40 lg:w-60 px-3 py-2 border-black/40 shadow-md border-1 rounded-xl z-100">
@@ -102,6 +119,7 @@
                 <div class="flex gap-1 text-xs lg:text-base mt-2 lg:mt-4">
                     <ul class="w-[40%] lg:w-[35%]">
                         <li>username</li>
+                        <li>password</li>
                         <li>email</li>
                         <li>public key</li>
                     </ul>
@@ -109,16 +127,19 @@
                         <li>:</li>
                         <li>:</li>
                         <li>:</li>
+                        <li>:</li>
                     </ul>
                     <ul id="account-details" class="w-[45%] lg:w-[50%]">
-                        <li id="profile-username"></li>
+                        <li id="profile-username" class="truncate"></li>
+                        <li id="profile-password" class="">******</li>
                         <li id="profile-email" class="truncate"></li>
-                        <li id="profile-public-key"></li>
+                        <li id="profile-public-key" class="truncate"></li>
                     </ul>
                     <ul id="profile-edit-button" class="w-[5%]">
-                        <li><button onclick="openEditUsernameLayer()"><i class="text-xs fa-solid fa-pen"></i></button></li>
-                        <li><button onclick="openEditEmailLayer()"><i class="text-xs fa-solid fa-pen"></i></button></li>
-                        <li><button onclick="openEditPublicKeyLayer()"><i class="text-xs fa-solid fa-pen"></i></button></li>
+                        <li><button onclick="toggleEditUsernameLayer(true)"><i class="text-xs fa-solid fa-pen"></i></button></li>
+                        <li><button onclick="toggleEditPasswordLayer(true)"><i class="text-xs fa-solid fa-pen"></i></button></li>
+                        <li><button onclick="toggleEditEmailLayer(true)"><i class="text-xs fa-solid fa-pen"></i></button></li>
+                        <li><button onclick="toggleEditPublicKeyLayer(true)"><i class="text-xs fa-solid fa-pen"></i></button></li>
                     </ul>
                 </div>
                 <div id="other" class="flex justify-between text-sm lg:text-xl mt-2 lg:mt-4 lg:px-1">
@@ -130,6 +151,8 @@
                 </div>
             </div>
         </div>
+        
+        
 
     </header>
 
@@ -159,7 +182,7 @@
                         <textarea id="edit-dummy-data-body" name="body" placeholder="body" rows="3" cols="1024" required class="border-1 rounded-xl px-2 py-1 text-xs lg:text-base"></textarea>
                         <div class="flex justify-between mt-4 text-base lg:text-lg">
                             <button onclick="closeEditDummyDataLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
-                            <input type="submit" value="save changes" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                            <input name="submitBtn" type="submit" value="save changes" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                         </div>
                     </form>
                 </div>
@@ -230,7 +253,7 @@
         <div id="dashboard-section" class="hidden flex-1 px-2 flex flex-col py-6">
             <h1 class="lg:text-4xl text-2xl text-center font-bold">Data Manager</h1>
 
-            <button onclick="openNewDataLayer()" class="mt-10 bg-green-500 hover:bg-green-600 self-end mr-2 lg:mr-6 pl-1 pr-2 text-base lg:text-2xl rounded-lg"><i class="fa-solid fa-plus"></i> new</button>
+            <button onclick="toggleNewDataLayer(true)" class="mt-10 bg-green-500 hover:bg-green-600 self-end mr-2 lg:mr-6 pl-1 pr-2 text-base lg:text-2xl rounded-lg"><i class="fa-solid fa-plus"></i> new</button>
             <div id="add-data-layer" class="hidden fixed top-0 left-0 w-full h-screen bg-black/30 ">
                 <div class="mt-30 px-3 lg:px-6 py-3 bg-white rounded-xl border-1 mx-6 lg:mx-auto lg:w-100">
                     <h1 class="text-2xl lg:text-3xl text-center">create new data</h1>
@@ -238,8 +261,8 @@
                         <input type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-2/3 lg:w-1/2">
                         <textarea name="body" placeholder="body" rows="3" required class="border-1 rounded-xl px-2 py-1 text-xs lg:text-base"></textarea>
                         <div class="flex justify-between mt-4 text-base lg:text-lg">
-                            <button onclick="closeNewDataLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
-                            <input type="submit" value="add now" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                            <button onclick="toggleNewDataLayer(false)" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                            <input name="submitBtn" type="submit" value="add now" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                         </div>
                     </form>
                 </div>
@@ -251,8 +274,8 @@
                         <input id="edit-data-title" type="text" name="title" placeholder="title" maxlength="16" required class="border-1 rounded-lg px-2 py-1 w-2/3 lg:w-1/2">
                         <textarea id="edit-data-body" name="body" placeholder="body" rows="3" cols="1024" required class="border-1 rounded-xl px-2 py-1 text-xs lg:text-base"></textarea>
                         <div class="flex justify-between mt-4 text-base lg:text-lg">
-                            <button onclick="closeEditDataLayer()" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
-                            <input type="submit" value="save changes" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
+                            <button onclick="toggleEditDataLayer(false)" type="button" class="bg-red-500 hover:bg-red-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl h-fit">cancel</button>
+                            <input name="submitBtn" type="submit" value="save changes" class="bg-green-500 hover:bg-green-600 px-3 lg:px-5 py-[2px] lg:py-1 rounded-xl cursor-pointer">
                         </div>
                     </form>
                 </div>
@@ -279,7 +302,7 @@
                             <button class="hidden" onclick="changeAccess(this)"><i class="text-blue-500 fa-solid fa-lock"></i></button>
                             <button class="hidden" onclick="changeAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
                         </div>
-                        <button onclick="openEditDataLayer(this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="toggleEditDataLayer(true, this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
                         <button onclick="deleteData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
                     </li>
                 </ul>
@@ -288,13 +311,23 @@
         </div>
 
         <div id="public-data-section" class="hidden flex-1 px-2 flex flex-col py-6 items-center">
-            <h1 id="public-data-owner" class="lg:text-4xl text-2xl text-center font-bold lg:mt-10"></h1>
+            <form id="search-username-form" class="lg:mt-10">
+                <h1 class="text-2xl lg:text-4xl text-center font-bold">Find the username</h1>
+
+                <div class="flex flex-col lg:flex-row gap-2 mt-12 lg:mt-18">
+                    <input name="username" type="text" placeholder="username" required maxlength="32" class="border-1 rounded-md text-lg py-1 px-2">
+                    <input name="submitBtn" type="submit" value="search" class="w-fit border-1 rounded-lg bg-blue-500 hover:bg-blue-600 cursor-pointer px-2 py-1 text-xl lg:text-xl text-white">
+                </div>
+            </form>
+
+            <h1 id="public-data-owner" class="hidden lg:text-4xl text-2xl text-center font-bold lg:mt-10"></h1>
 
 
-            <form id="public-data-form" class="mt-10 lg:mt-18 text-base lg:text-xl items-center">
-                <label for="#public-key-input">public key : </label>
-                <input type="password" name="publicKeyInput" id="public-key-input" required maxlength="255" class="border-1 text-lg rounded-md px-2">
-                <input type="submit" value="verify" class="bg-blue-500 border-1 rounded-lg text-xl px-2 cursor-pointer text-white">
+            <form id="public-data-form" class="hidden mt-10 lg:mt-18 text-base lg:text-xl items-center">
+                <div class="flex flex-col lg:flex-row gap-2">
+                    <input type="password" placeholder="public key" name="publicKeyInput" id="public-key-input" required maxlength="255" class="border-1 text-lg rounded-md px-2 py-1">
+                    <input name="submitBtn" type="submit" value="verify" class="w-fit bg-blue-500 border-1 rounded-lg text-xl px-2 py-1 cursor-pointer text-white">
+                </div>
             </form>
 
             <h2 id="null-public-data-text" class="hidden text-xl text-center mt-18">this user doesn't have any public data</h2>
