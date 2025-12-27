@@ -104,7 +104,7 @@ userController.editEmail = async (req, res) => {
             .update(token)
             .digest('hex')
 
-        await redis.set(tokenHash, JSON.stringify({ user_id: id, email: newEmail, type: "verify_email" }), { EX: 900 });
+        await redis.set("databox:" + tokenHash, JSON.stringify({ user_id: id, email: newEmail, type: "verify_email" }), { EX: 900 });
 
         const link = `https://databox-server.arkanafaisal.my.id/users/verify-email?token=${token}`
         const transporter = nodemailer.createTransport({
@@ -138,7 +138,7 @@ userController.verifyEmail = async (req, res) => {
             .digest('hex')
 
     try{
-        const data = await redis.get(tokenHash);
+        const data = await redis.get("databox:" + tokenHash);
         if (!data) return response(res, false, "invalid or expired link verification");
         const tokenData = JSON.parse(data);
         if (tokenData.type && tokenData.type !== "verify_email") return response(res, false, "invalid link type");
@@ -167,7 +167,7 @@ userController.resetPassword = async (req, res) => {
             .update(token)
             .digest('hex')
 
-        await redis.set(tokenHash, JSON.stringify({ user_id: id, email: result.email, type:"reset_password"}), { EX: 900 });
+        await redis.set("databox:" + tokenHash, JSON.stringify({ user_id: id, email: result.email, type:"reset_password"}), { EX: 900 });
 
         const link = `https://databox.arkanafaisal.my.id/src/reset-password/?token=${token}`
         const transporter = nodemailer.createTransport({
@@ -203,7 +203,7 @@ userController.verifyResetPassword = async (req, res) => {
         .digest('hex')
     
     try {
-        const data = await redis.get(tokenHash)
+        const data = await redis.get("databox:" + tokenHash)
         if(!data) return response(res, false, "invalid or expired token")
         const tokenData = await JSON.parse(data)
         if(tokenData.type && tokenData.type !== "reset_password") return response(res, false, "invalid token type")
