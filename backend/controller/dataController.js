@@ -107,10 +107,10 @@ dataController.getPublicData = async (req, res) => {
         const [[user]] = await db.query('SELECT id, publicKey FROM users WHERE username = ?', [username])
         if(!user) return response(res, false, 'user is not exist')
         
+        if(user.publicKey !== null && publicKey !== user.publicKey) return response(res, false, 'permission denied')
         const rawData = await redis.get(`databox:cache:publicData:${user.id}`)
         if(rawData){return response(res, true, "permission granted", JSON.parse(rawData))}
 
-        if(user.publicKey !== null && publicKey !== user.publicKey) return response(res, false, 'permission denied')
         const [result2] = await db.query('SELECT title, body FROM userData WHERE user_id = ? AND access = "public" ORDER BY id ASC', [user.id])
         await redis.set(`databox:cache:publicData:${user.id}`, JSON.stringify(result2), {"EX": 600})
         return response(res, true, 'permission granted', result2)
