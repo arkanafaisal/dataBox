@@ -5,10 +5,10 @@ import dataController from '../controller/dataController.js';
 import rateLimiting from '../middleware/rateLimiting.js';
 
 const dataRouter = express.Router();
-dataRouter.use('/', (req, res, next) => {
-    //console.log('data endpoint hit');
-    next();
-})
+// dataRouter.use('/', (req, res, next) => {
+//     console.log('data endpoint hit');
+//     next();
+// })
 
 dataRouter.post('/add',                 rateLimiting('addData', 1, 30),         jwtVerify,  dataController.addData)
 dataRouter.get('/me',                   rateLimiting('getMyData', 1, 60),       jwtVerify,  dataController.getMyData)

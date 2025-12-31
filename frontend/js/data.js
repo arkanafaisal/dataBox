@@ -14,7 +14,7 @@ addDataForm.addEventListener('submit', async (e) => {
             return
         }
 
-        const res = await fetching('data/add', 'POST', { title, body }, true);
+        const res = await fetching('data/add', 'POST', { title, body });
         if(!res.success){return alert(res.message)}
         addData(res.data)
         toggleNewDataLayer(false);
@@ -44,7 +44,7 @@ editDataForm.addEventListener('submit', async (e)=>{
         if(!datas.title || !datas.body) return addNotification("all fields are required")
         if(datas.title.length > 16 || datas.body.length > 1024) return addNotification('invalid data length')
 
-        const res = await fetching(`data/edit/${datas.id}`, 'PATCH', datas, true)
+        const res = await fetching(`data/edit/${datas.id}`, 'PATCH', datas)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editDataForm.reset()
@@ -74,7 +74,7 @@ editUsernameForm.addEventListener('submit', async (e)=>{
         if(!newUsername || !password) return addNotification('all fields are required')
         if(newUsername.length > 32 || password.length > 255) return addNotification('invalid data length')
 
-        const res = await fetching(`users/username`, 'PATCH', {newUsername, password}, true)
+        const res = await fetching(`users/username`, 'PATCH', {newUsername, password})
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editUsernameForm.reset()
@@ -102,7 +102,7 @@ editEmailForm.addEventListener('submit', async (e)=>{
         if(!newEmail || !password) return addNotification('all fields are required')
         if(newEmail.length > 32 || password.length > 255) return addNotification('invalid data length')
 
-        const res = await fetching(`users/email`, 'PATCH', {newEmail, password}, true)
+        const res = await fetching(`users/email`, 'PATCH', {email: newEmail, password})
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editEmailForm.reset()
@@ -121,7 +121,7 @@ editPasswordForm.addEventListener('submit', async (e)=>{
     editPasswordForm.submitBtn.disabled = true
 
     try{
-        const res = await fetching(`users/reset-password`, 'POST', null, true)
+        const res = await fetching(`users/reset-password`, 'POST', null)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editPasswordForm.reset()
@@ -139,14 +139,14 @@ editPublicKeyForm.addEventListener('submit', async (e)=>{
     e.preventDefault()
     editPublicKeyForm.submitBtn.disabled = true
 
-    const newPublicKey = editPublicKeyForm.newPublicKey.value
+    const newPublicKey = editPublicKeyForm.newPublicKey.value.trim()
 
     
     try{
         if(!newPublicKey) return addNotification('all fields are required')
         if(newPublicKey.length > 255) return addNotification('invalid data length')
         
-        const res = await fetching(`users/public-key`, 'PATCH', {newPublicKey}, true)
+        const res = await fetching(`users/public-key`, 'PATCH', {newPublicKey})
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editPublicKeyForm.reset()
@@ -210,7 +210,7 @@ async function changeAccess(el){
     const dataId = (el.closest('#data-node')).dataset.id
 
     try{
-        const res = await fetching(`data/update/access/${dataId}`, 'POST', null, true);
+        const res = await fetching(`data/update/access/${dataId}`, 'POST', null);
         if(!res.success){return addNotification(res.message)}
         changeAccessIcon(res.data, el.closest('#access-button'));
         addNotification('access changed to ' + res.data)
@@ -225,7 +225,7 @@ async function deleteData(el){
     const dataId = dataNode.dataset.id;
     
     try{
-        const res = await fetching(`data/delete/${dataId}`, 'DELETE', null, true)
+        const res = await fetching(`data/delete/${dataId}`, 'DELETE', null)
         if(!res.success){return addNotification(res.message)}
         dataNode.remove()
         addNotification('data removed')

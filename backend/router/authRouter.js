@@ -4,13 +4,15 @@ import rateLimiting from '../middleware/rateLimiting.js';
 
 const authRouter = express.Router();
 
-authRouter.use('/', (req, res, next)=>{
-    console.log('/auth endpoint hit')
-    next();
-})
+// authRouter.use('/', (req, res, next)=>{
+//     console.log('/auth endpoint hit')
+//     next();
+// })
 
 authRouter.post('/register',    rateLimiting("register", 15, 3),    authController.register);
 authRouter.post('/login',       rateLimiting('login', 1, 5),        authController.login);
+authRouter.post('/refresh',     rateLimiting('login', 1, 15),       authController.refresh);
+authRouter.delete('/logout',    rateLimiting('logout', 1, 5),       authController.logout)
 
 
 

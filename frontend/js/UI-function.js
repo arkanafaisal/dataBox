@@ -24,9 +24,16 @@ function loginBtnHandler(){
     lockScroll(true)
 }
 
-function LogoutBtnHandler(){
-    localStorage.removeItem("token");
-    window.location.reload();
+async function LogoutBtnHandler(){
+    try {
+        const res = await fetching('auth/logout', 'DELETE')
+        addNotification(res.message)
+        if(!res){return}
+        
+        window.location.reload();
+    } catch(err) {
+        addNotification(err)
+    }
 }
 
 function showLogoutBtn(ifYes){

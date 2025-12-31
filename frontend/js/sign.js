@@ -50,7 +50,6 @@ signInForm.addEventListener("submit", async (e) => {
             errMessage.textContent = res.message
             return
         }
-        localStorage.setItem("token", "Bearer " + res.data.token)
         window.location.reload()
     } catch(err){
         errMessage.textContent = err.code

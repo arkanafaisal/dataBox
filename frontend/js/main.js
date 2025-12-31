@@ -10,13 +10,8 @@ async function mainFunction(isDashboardSection, hashUsername = null){
         if(hashUsername)validateUsername(hashUsername)
         return
     }
-    const token = localStorage.getItem("token")
-    if(!token) {
-        removeAccountEditButton()
-        return
-    }
     try{
-        const res = await fetching('users/me', 'POST', null, true)
+        const res = await fetching('users/me', 'POST')
         if(!res.success) return addNotification('could not get your data')
 
         removeHomeSection()
@@ -27,6 +22,7 @@ async function mainFunction(isDashboardSection, hashUsername = null){
         showDashboardSection()
         setDataManager()
     } catch(err){
+        console.log(err)
         addNotification('error ocurred, please try reload')
     }
 }
@@ -68,8 +64,8 @@ async function setDataManager(){
     const dataManagerSection = document.getElementById("data-manager-section")
 
     try{
-        const res = await fetching('data/me', 'GET', null, true)
-        if(!res.success) return addNotification(res.message)
+        const res = await fetching('data/me', 'GET')
+        if(!res.success) return
         setMyData(res.data)
     } catch(err){
         addNotification(err)
