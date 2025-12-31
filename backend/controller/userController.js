@@ -79,6 +79,7 @@ userController.editPublicKey = async (req, res) => {
         if(result.affectedRows === 0) return response(res, false, "user not found")
         if(result.changedRows === 0) return response(res, false, "there's nothing to change")
         await redis.del(`databox:cache:profileData:${id}`)
+        await redis.del(`databox:cache:publicData:${id}`)
         
         return response(res, true, 'public key changed', newPublicKey)
     } catch(err) {
