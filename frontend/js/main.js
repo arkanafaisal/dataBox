@@ -12,7 +12,7 @@ async function mainFunction(isDashboardSection, hashUsername = null){
     }
     try{
         const res = await fetching('users/me', 'POST')
-        if(!res.success) return addNotification('could not get your data')
+        if(!res.success) return addNotification(res.message)
 
         removeHomeSection()
         setAccountDetails(res.data.username, res.data.email, res.data.publicKey)
@@ -65,7 +65,7 @@ async function setDataManager(){
 
     try{
         const res = await fetching('data/me', 'GET')
-        if(!res.success) return
+        if(!res.success) return addNotification(res.message)
         setMyData(res.data)
     } catch(err){
         addNotification(err)

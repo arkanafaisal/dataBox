@@ -15,7 +15,7 @@ addDataForm.addEventListener('submit', async (e) => {
         }
 
         const res = await fetching('data/add', 'POST', { title, body });
-        if(!res.success){return alert(res.message)}
+        if(!res.success){return addNotification(res.message)}
         addData(res.data)
         toggleNewDataLayer(false);
         addDataForm.reset();
