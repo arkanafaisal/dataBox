@@ -136,7 +136,8 @@ authController.refresh = async (req, res) => {
             httpOnly: true,
             sameSite,
             secure,
-            path: "/"
+            path: "/",
+            maxAge: 1000 * 60 * 10
         })
         return response(res, true, "new access token created")
     } catch(err) {
