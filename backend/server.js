@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import 'dotenv/config'
 
 
 const app = express()
@@ -10,9 +11,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 
 app.use(cors({
-  origin: 'https://databox.arkanafaisal.my.id', //'http://127.0.0.1:5500',  // ganti dengan URL frontend production
+  origin: process.env.NODE_ENV === "development"? 'http://127.0.0.1:5500' : 'https://databox.arkanafaisal.my.id',
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // opsional, untuk batasi method
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type'],   // opsional, header yg diizinkan
   preflightContinue: false,
   optionsSuccessStatus: 204

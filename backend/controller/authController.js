@@ -1,101 +1,90 @@
 import jwt from 'jsonwebtoken';
-import db from '../db.js';
-import response from '../response.js';
-import bcrypt from "bcrypt"
-import Joi from 'joi';
-import redis from '../redis.js';
+import {randomUUID} from 'crypto'
+
+import * as userSchema from '../schema/user-schema.js'
+import * as UserModel from '../model/user-model.js'
+import * as redisHelper from '../utils/redis-helper.js'
+
+import { response } from '../utils/response.js';
+import { validate } from '../utils/validate.js';
 
 const authController = {}
-const sameSite = 'none'
-const secure = true
+const sameSite = process.env.NODE_ENV === "development"? 'none' : 'Lax'
+
+const cookieOptions = {
+    accessToken: {
+        httpOnly: true,
+        sameSite,
+        secure: true,
+        path: '/',
+        maxAge: 10* 60 * 1000
+    },
+    refreshToken: {
+        httpOnly: true,
+        sameSite,
+        secure: true,
+        path: '/',
+        maxAge: 168 * 60 * 60 * 1000
+    }
+}
 
 
 authController.register = async (req, res)=>{
-    const userSchema = Joi.object({
-        username: Joi.string().trim().max(32).pattern(/^[a-zA-Z0-9]+$/).required(),
-        email: Joi.string().trim().lowercase().email().max(64).allow('', null),
-        password: Joi.string().trim().max(255).required()
-    })
-
-    const {error, value} = userSchema.validate(req.body)
-    if(error){return response(res, false, error.details[0].message)}
+    const {ok, message, value: userRequest} = validate(userSchema.register, req.body)
+    if(!ok){return response(res, false, message)}
 
     try{
-        const hash = await bcrypt.hash(value.password, 10)
-        const [result] = await db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [value.username, value.email, hash])
-        if(result.affectedRows === 0){return response(res, false, "register error")}
-        return response(res, true, 'user created')
-    } catch(error) {
-        if (error.code === 'ER_DUP_ENTRY') {return response(res, false, "username or email already taken")}
-        console.log(error)
-        return response(res, false, 'could not create user')
+        const insertId = await UserModel.register(userRequest)
+        if(!insertId){return response(res, false, "register failed")}
+        return response(res, true, 'register success')
+    } catch(err) {
+        if(err.msg === "duplicate"){return response(res, false, "username or email is already taken")}
+        console.log(err)
+        return response(res, false, 'server error', null, 500)
     }
 }
 
 authController.login = async (req, res)=>{
-    const inputSchema = {
-        password: Joi.string().trim().max(255).required()
-    }
-    if(req.body.usernameOrEmail.includes('@')){
-        inputSchema.usernameOrEmail = Joi.string().trim().lowercase().email().max(64).required()
-    } else {
-        inputSchema.usernameOrEmail = Joi.string().trim().max(32).pattern(/^[a-zA-Z0-9]+$/).required()
-    }
-
-    const {error, value} = Joi.object(inputSchema).validate(req.body)
-    if(error){return response(res, false, error.details[0].message)}
-    const {usernameOrEmail, password} = value
-    
+    const {ok, message, value: userRequest} = validate(userSchema.login, req.body)
+    if(!ok){return response(res, false, message)}
 
     try{
-        const [[user]] = await db.query('SELECT id, username, password FROM users WHERE (username = ? OR email = ?)', [usernameOrEmail, usernameOrEmail])
+        const user = await UserModel.authenticateUser(userRequest)
         if(!user){return response(res, false, 'wrong username, email or password')}
-        const ok = await bcrypt.compare(password, user.password)
-        if(!ok){return response(res, false, 'wrong username, email or password')}
         
         const accessToken = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '10m'})
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            sameSite, //secure
-            secure, //true
-            path: '/',
-            maxAge: 10 * 60 * 1000
-        })
+        const refreshToken = randomUUID()
 
-        const refreshToken = jwt.sign({id: user.id}, process.env.JWT_REFRESHKEY, {expiresIn: '168h'})
-        await redis.set(`databox:tokens:${refreshToken}`, "a", {'EX': (60 * 60 * 168)})
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            sameSite, //secure
-            secure, //true
-            path: '/',
-            maxAge: 1000 * 60 * 60 * 168
-        })
+        const {ok: ok2} = await redisHelper.set('tokens', refreshToken, user.id)
+        if(!ok2){return response(res, false, 'login failed')}
+
+        res.cookie('accessToken', accessToken, cookieOptions.accessToken)
+        res.cookie('refreshToken', refreshToken, cookieOptions.refreshToken)
+
         return response(res, true, 'login success')
     } catch(err) {
-        return response(res, false, 'could not login')
+        console.log(err)
+        return response(res, false, 'server error', null, 500)
     }
 }
 
 authController.logout = async (req, res) => {
-    try {
-        await redis.del(`databox:tokens:${req.cookies.refreshToken}`)
-    } catch(err){
-        console.log(err)
-        return response(res, false, "logout failed")
+    const refreshToken = req.cookies.refreshToken
+    if(refreshToken){
+        (async () => {
+            for(let i = 0; i < 3; i++){
+                const {ok} = await redisHelper.del('tokens', refreshToken)
+                if(ok) break
+                await new Promise(r => setTimeout(r, 500))
+            }
+        })()
     }
-    res.clearCookie("refreshToken", {
-        httpOnly: true,    
-        sameSite, 
-        path: '/',     
-        secure,
-    })
-    res.clearCookie("accessToken", {
-        httpOnly: true,    
-        sameSite, 
-        path: '/',     
-        secure,
-    })
+
+    res.clearCookie("refreshToken", cookieOptions.refreshToken)
+    res.clearCookie("accessToken", cookieOptions.accessToken)
+    
+
+
     return response(res, true, "logout success")
 }
 
@@ -105,45 +94,35 @@ authController.logout = async (req, res) => {
 
 authController.refresh = async (req, res) => {
     const refreshToken = req.cookies.refreshToken
-    if(!refreshToken){return response(res, false, "please login")}
+    if(!refreshToken){return response(res, false, "please login", null, 401)}
     try {
-        const rawData = await redis.get(`databox:tokens:${refreshToken}`)
-        if(!rawData){return response(res, false, "please try re-log")}
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESHKEY)
+        const {ok, data: userId} = await redisHelper.get('tokens', refreshToken)
+        if(!ok){return response(res, false, "user not found, please try re-log", null, 401)}
         
-        const [[user]] = await db.query('SELECT username FROM users WHERE id = ?', [decoded.id])
-        if(!user){
-            await redis.del(`databox:tokens:${refreshToken}`)
-            res.clearCookie("refreshToken", {
-                httpOnly: true,
-                sameSite,
-                secure, 
-                path: "/"
-            })
-            res.clearCookie("accessToken", {
-                httpOnly: true,
-                sameSite,
-                secure, 
-                path: "/"
-            })
-            return response(res, false, "please try re-log")
+        const isExist = await UserModel.validateUserId({id: userId})
+        if(!isExist){
+            (async () => {
+                for(let i = 0; i < 3; i++){
+                    const {ok} = await redisHelper.del('tokens', refreshToken)
+                    if(ok) break
+                    await new Promise(r => setTimeout(r, 500))
+                }
+            })()
+
+            res.clearCookie("refreshToken", cookieOptions.refreshToken)
+            res.clearCookie("accessToken", cookieOptions.accessToken)
+
+            return response(res, false, "user not found, please try re-log", null, 401)
+
         }
 
-        const payload = {id: decoded.id, ...user}
+        const accessToken = jwt.sign({id: userId}, process.env.JWT_SECRET, {expiresIn: '10m'})
+        res.cookie("accessToken", accessToken, cookieOptions.accessToken)
 
-        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '10m'})
-        res.cookie("accessToken", accessToken, {
-            httpOnly: true,
-            sameSite,
-            secure,
-            path: "/",
-            maxAge: 1000 * 60 * 10
-        })
         return response(res, true, "new access token created")
     } catch(err) {
-        if(err.name === 'TokenExpiredError'){return response(res, false, 'please try re-log')}
-        else if(err.name === 'JsonWebTokenError'){return response(res, false, 'please login')}
-        else{return response(res, false, 'could not verify token')}
+        console.log(err)
+        return response(res, false, 'could not verify token, please try re-log', null, 401)
     }
 }
 

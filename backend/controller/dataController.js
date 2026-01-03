@@ -1,121 +1,129 @@
-import Joi from 'joi';
-import db from '../db.js';
-import response from '../response.js';
-import redis from '../redis.js';
+import * as dataSchema from '../schema/data-schema.js'
+import * as userSchema from '../schema/user-schema.js'
+import * as DataModel from '../model/data-model.js'
+import * as UserModel from '../model/user-model.js'
+import * as redisHelper from '../utils/redis-helper.js'
+
+import { response } from '../utils/response.js';
+import { validate } from '../utils/validate.js';
 
 
 const dataController = {};
 
 dataController.addData = async (req, res) => {
-    const insertDataSchema = Joi.object({
-        title: Joi.string().trim().max(16).required(),
-        body: Joi.string().max(1024).required()
-    })
-    const {error, value} = insertDataSchema.validate(req.body)
-    if(error){return response(res, false, error.details[0].message)}
-    try{
-        const [result] = await db.query('INSERT INTO userData (user_id, title, body) VALUES (?, ?, ?)', [req.user.id, value.title, value.body])
-        await redis.del(`databox:cache:userData:${req.user.id}`)
+    const {ok, message, value: userRequest} = validate(dataSchema.insert, req.body)
+    if(!ok){return response(res, false, message)}
 
-        return response(res, true, 'data added successfully', {id: result.insertId, title: value.title, body: value.body, access:'private'})
+    try{
+        const insertId = await DataModel.insert({userId: req.user.id, ...userRequest})
+        if(!insertId){return response(res, false, "failed to add the data")}
+        await redisHelper.del('cache', `userData:${req.user.id}`)
+
+        return response(res, true, 'data added successfully', {id: insertId, ...userRequest, access:'private'})
     } catch(err) {
-        return response(res, false, 'could not add data')
+        console.log(err)
+        return response(res, false, 'server error', null, 500)
     }
 }
 
 dataController.getMyData = async (req, res) => {
     try{
-        const rawData = await redis.get(`databox:cache:userData:${req.user.id}`)
-        if(rawData){return response(res, true, "retrieved data successfully", JSON.parse(rawData))}
-        const [result] = await db.query('SELECT id, title, body, access FROM userData WHERE user_id = ?', [req.user.id])
-        await redis.set(`databox:cache:userData:${req.user.id}`, JSON.stringify(result), {"EX": 600})
+        const {ok, data: cachedUserData} = await redisHelper.get('cache', `userData:${req.user.id}`)
+        if(ok){return response(res, true, 'retrieved your data', cachedUserData)}
 
-        return response(res, true,'retrieved data successfully', result)
+        const userData = await DataModel.getMyData({userId: req.user.id})
+        await redisHelper.set('cache', `userData:${req.user.id}`, userData)
+
+        return response(res, true, 'retrieved your data', userData)
     } catch(err) {
-        return response(res, false, 'could not retrieve data')
+        console.log(err)
+        return response(res, false, 'server error', null, 500)
     }
 }
 
 dataController.deleteData = async (req, res) => {
-    const dataIdSchema = Joi.number().integer().positive().required()
-    const {error, value} = dataIdSchema.validate(req.params.id)
-    if(error){return response(res, false, error.details[0].message)}
+    const {ok, message, value: id} = validate(dataSchema.dataId, req.params.id)
+    if(!ok){return response(res, false, message)}
+
     try{
-        const [result] = await db.query('DELETE FROM userData WHERE id = ? AND user_id = ?', [value, req.user.id])
-        if(result.affectedRows === 0){return response(res, false, 'data not found')}
-        await redis.del(`databox:cache:userData:${req.user.id}`)
-        await redis.del(`databox:cache:publicData:${req.user.id}`)
+        const affectedRows = await DataModel.remove({id, userId: req.user.id})
+        if(affectedRows === 0){return response(res, false, 'data not found, please refresh', null, 40101)}
+        
+        await redisHelper.del('cache', `userData:${req.user.id}`)
+        await redisHelper.del('cache', `publicData:${req.user.id}`)
         
         return response(res, true, 'data deleted successfully')
     } catch(err) {
-        return response(res, false, 'could not delete data')
+        console.log(err)
+        return response(res, false, 'server error', null, 500)
     }
 }
 
 dataController.updateAccess = async (req, res) => {
-    const dataIdSchema = Joi.number().integer().positive().required()
-    const {error, value} = dataIdSchema.validate(req.params.id)
-    if(error){return response(res, false, error.details[0].message)}
+    const {ok, message, value: id} = validate(dataSchema.dataId, req.params.id)
+    if(!ok){return response(res, false, message)}
+
     try{
-        const [result] = await db.query(`UPDATE userData SET access = IF(access = 'public', 'private', 'public') WHERE id = ? AND user_id = ?`, [value, req.user.id])
-        if(result.affectedRows === 0){return response(res, false, 'data not found')}
-        await redis.del(`databox:cache:userData:${req.user.id}`)
+        const affectedRows = await DataModel.updateAccess({id, userId: req.user.id})
+        if(affectedRows === 0){return response(res, false, 'data not found, please refresh', null, 401)}
         
-        const [[newDataAccess]] = await db.query('SELECT access FROM userData WHERE id = ? AND user_id = ?', [value, req.user.id])
-        if(!newDataAccess){return response(res, false, "data not found")}
-        await redis.del(`databox:cache:publicData:${req.user.id}`)
-        return response(res, true, 'access updated successfully', newDataAccess.access)
+        await redisHelper.del('cache', `userData:${req.user.id}`)
+        await redisHelper.del('cache', `publicData:${req.user.id}`)
+        
+        const access = await DataModel.getDataAccess({id, userId: req.user.id})
+        if(!access){return response(res, true, "access updated but please do refresh", null, 401)}
+
+        return response(res, true, 'access updated successfully', access)
     } catch(err) {
-        return response(res, false, 'could not update access')
+        console.log(err)
+        return response(res, false, 'server error', null, 500)
     }
 }
 
 dataController.updateData = async (req, res) => {
-    const dataIdSchema = Joi.number().integer().positive().required()
-    const {error: dataIdError, value: dataId} = dataIdSchema.validate(req.params.id)
-    if(dataIdError){return response(res, false, dataIdError.details[0].message)}
+    const {ok, message, value: id} = validate(dataSchema.dataId, req.params.id)
+    if(!ok){return response(res, false, message)}
 
-    const updateDataSchema = Joi.object({
-        title: Joi.string().trim().max(16).required(),
-        body: Joi.string().max(1024).required()
-    })
-    const {error: updateDataError, value: dataValue} = updateDataSchema.validate(req.body)
-    if(updateDataError){return response(res, false, updateDataError.details[0].message)}
+    const {ok: ok2, message: message2, value: userRequest} = validate(dataSchema.insert, req.body)
+    if(!ok2){return response(res, false, message2)}
 
     try{
-        const [result] = await db.query(`UPDATE userData SET title = ?, body = ? WHERE user_id = ? AND id = ?`, [dataValue.title, dataValue.body, req.user.id, dataId])
-        if(result.affectedRows === 0) return response(res, false, 'data not found')
-        if(result.changedRows === 0) return response(res, false, "there's nothing to change")
-        await redis.del(`databox:cache:userData:${req.user.id}`)
-        await redis.del(`databox:cache:publicData:${req.user.id}`)
+        const {affectedRows, changedRows} = await DataModel.updateData({...userRequest, id, userId: req.user.id})
+        if(affectedRows === 0) return response(res, false, 'data not found', false, 40101)
+        if(changedRows === 0) return response(res, false, "there's nothing to change")
+            
+        await redisHelper.del('cache', `userData:${req.user.id}`)
+        await redisHelper.del('cache', `publicData:${req.user.id}`)
     
-        return response(res, true, 'successfully edit data', {dataId, title: dataValue.title, body: dataValue.body})
+        return response(res, true, 'successfully edit data', {id, ...userRequest})
         } catch(err){
-        return response(res, false, "could not update data")
+        console.log(err)
+        return response(res, false, 'server error', null, 500)
     }
 }
 
 dataController.getPublicData = async (req, res) => {
-    const usernameSchema = Joi.string().trim().max(32).required()
-    const {error: usernameError, value:username} = usernameSchema.validate(req.params.username)
-    if(usernameError){return response(res, false, usernameError.details[0].message)}
-    const publicKeySchema = Joi.string().trim().max(255).allow('', null)
-    const {error: publicKeyError, value: publicKey} = publicKeySchema.validate(req.body.publicKey)
-    if(publicKeyError){return response(res, false, publicKeyError.details[0].message)}
+    const {ok, message, value: username} = validate(userSchema.username, req.params.username)
+    if(!ok){return response(res, false, message)}
+    const {ok: ok2, message: message2, value: inputPublicKey} = validate(userSchema.publicKey, req.body.publicKey)
+    if(!ok2){return response(res, false, message2)}
     
     try{
-        const [[user]] = await db.query('SELECT id, publicKey FROM users WHERE username = ?', [username])
-        if(!user) return response(res, false, 'user is not exist')
-        
-        if(user.publicKey !== null && publicKey !== user.publicKey) return response(res, false, 'permission denied')
-        const rawData = await redis.get(`databox:cache:publicData:${user.id}`)
-        if(rawData){return response(res, true, "permission granted", JSON.parse(rawData))}
+        const {id, publicKey} = await UserModel.getUserByUsername({username})
+        if(!id){return response(res, false, "user not found")}
 
-        const [result2] = await db.query('SELECT title, body FROM userData WHERE user_id = ? AND access = "public" ORDER BY id ASC', [user.id])
-        await redis.set(`databox:cache:publicData:${user.id}`, JSON.stringify(result2), {"EX": 600})
-        return response(res, true, 'permission granted', result2)
+        if(publicKey !== null && publicKey !== inputPublicKey) return response(res, false, 'permission denied')
+
+        const {ok, data: cachedPublicData} = await redisHelper.get('cache', `publicData:${id}`)
+        if(ok){return response(res, true, 'permission granted', cachedPublicData)}
+
+        const publicData = await DataModel.getPublicData({userId: id})
+        await redisHelper.set('cache', `publicData:${id}`, publicData)
+
+        return response(res, true, 'permission granted', publicData)
     } catch(err) {
-        return response(res, false, 'could not get public data')
+        console.log(err)
+        return response(res, false, 'server error', null, 500)
     }
 }
 
