@@ -303,7 +303,6 @@ function deleteDummyData(el){
 
 function copyDummyData(el){
     const text = el.closest('#dummy-data-node').querySelector('#data-body').value
-    console.log(text)
     navigator.clipboard.writeText(text)
     addNotification('data copied')
 }

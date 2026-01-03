@@ -32,7 +32,7 @@
         <div id="sign-in-card" class=" absolute py-4 lg:py-6 px-6 bg-white rounded-xl shadow-md">
             <h1 id="sign-in-title" class="text-2xl lg:text-3xl font-bold text-center">welcome back! login</h1>
             <form id="sign-in-form" method="POST" class="mt-5 lg:mt-8 flex flex-col gap-1 text-sm lg:text-base">
-                <input name="usernameOrEmailInput" type="text" maxlength="32" required placeholder="username or email" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
+                <input name="identifierInput" type="text" maxlength="32" required placeholder="username or email" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
                 <input name="passwordInput" type="password" maxlength="128" required placeholder="password" class="w-full py-1 px-2 shadow-md border-1 border-black/20 rounded-lg">
                 
                 <h4 id="error-message" class="text-xs h-5 text-red-500"></h4>
@@ -207,7 +207,7 @@
                             <button class="hidden" onclick="changeDummyAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
                         </div>
                         <button onclick="openEditDummyDataLayer(this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
+                        <button onclick="deleteDummyData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
                     </li>
                 </ul>
                 <ul id="dummy-data-node" data-id="2" class="w-full grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">
@@ -223,7 +223,7 @@
                             <button class="" onclick="changeDummyAccess(this)"><i class="text-green-500 fa-solid fa-lock-open"></i></button>
                         </div>
                         <button onclick="openEditDummyDataLayer(this)" class="h-4"><i class="text-yellow-400 fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
+                        <button onclick="deleteDummyData(this)" class="h-4 ml-2"><i class="text-red-500 fa-solid fa-trash"></i></button>
                     </li>
                 </ul>
                 <ul id="dummy-data-node" data-id="3" class="w-full grid grid-cols-[10%_20%_45%_25%] lg:grid-cols-[5%_20%_60%_15%] text-center border-b-1">

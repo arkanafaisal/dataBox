@@ -39,12 +39,12 @@ signInForm.addEventListener("submit", async (e) => {
     signInForm.submitBtn.disabled = true
 
     try{
-        const usernameOrEmail = signInForm.usernameOrEmailInput.value.trim()
+        const identifier = signInForm.identifierInput.value.trim()
         const password = signInForm.passwordInput.value.trim()
-        if(!usernameOrEmail || !password) {return errMessage.textContent = "All fields are required"}
-        if(usernameOrEmail.length > 64 || password.length > 128){return errMessage.textContent = 'invalid input length'}
+        if(!identifier || !password) {return errMessage.textContent = "All fields are required"}
+        if(identifier.length > 64 || password.length > 128){return errMessage.textContent = 'invalid input length'}
         
-        const payload = {usernameOrEmail, password}
+        const payload = {identifier, password}
         const res = await fetching('auth/login', 'POST', payload)
         if(!res.success){
             errMessage.textContent = res.message

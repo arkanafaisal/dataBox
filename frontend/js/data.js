@@ -33,8 +33,8 @@ editDataForm.addEventListener('submit', async (e)=>{
     e.preventDefault()
     editDataForm.submitBtn.disabled = true
 
+    const id = editDataForm.dataset.currentID
     const datas = {
-        id: editDataForm.dataset.currentID,
         title: editDataForm.title.value.trim(),
         body:editDataForm.body.value
     }
@@ -44,7 +44,7 @@ editDataForm.addEventListener('submit', async (e)=>{
         if(!datas.title || !datas.body) return addNotification("all fields are required")
         if(datas.title.length > 16 || datas.body.length > 1024) return addNotification('invalid data length')
 
-        const res = await fetching(`data/edit/${datas.id}`, 'PATCH', datas)
+        const res = await fetching(`data/edit/${id}`, 'PATCH', datas)
         if(!res.success) return addNotification(res.message)
         addNotification(res.message)
         editDataForm.reset()

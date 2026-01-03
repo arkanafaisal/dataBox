@@ -93,7 +93,8 @@ function router() {
     if(hash === "") {return mainFunction(true)}
 
     if( !(hash.startsWith("#/")) ) {return window.location.href = "#/"}
-
+    console.log(hash.split("/")[2])
+    if(hash.startsWith('#/profile/')){return mainFunction(false, hash.split("/")[2])}
     mainFunction(false, hash.split("/")[1])
 }
 

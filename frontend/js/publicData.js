@@ -87,6 +87,7 @@ function setPublicDataOwner(username){
 async function validateUsername(username){
     try {
         const res = await fetching("users/search/" + username, "GET")
+        console.log(res)
         addNotification(res.message)
 
         if(res.success) return setPublicDataOwner(res.data)
