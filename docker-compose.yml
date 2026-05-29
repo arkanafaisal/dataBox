@@ -2,6 +2,7 @@ name: textvault
 
 services:
   app:
+    container-name: app-textvault
     build:
       context: .
       target: app
@@ -12,20 +13,22 @@ services:
     env_file:
       - .env
     restart: always
+    networks:
+      - caddy_net
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
 
-  caddy:
-    image: caddy:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-    restart: always
+  # caddy:
+  #   image: caddy:latest
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./Caddyfile:/etc/caddy/Caddyfile
+  #     - caddy_data:/data
+  #     - caddy_config:/config
+  #   restart: always
 
 
   flyway:
@@ -43,6 +46,10 @@ services:
 
 
 
-volumes:
-  caddy_data:
-  caddy_config:
+networks:
+  caddy_net:
+    external: true
+
+# volumes:
+#   caddy_data:
+#   caddy_config:
